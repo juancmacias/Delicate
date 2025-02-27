@@ -1,5 +1,5 @@
 # 🚀 Proyecto: Delicaté
-
+## Repositorio Public-Dev
 ## Equipo
 <div align="center">
   <img src="https://avatars.githubusercontent.com/u/53483587?v=4" width="64" alt="Juan Carlos Macías">
