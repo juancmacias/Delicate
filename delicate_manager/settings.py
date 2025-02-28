@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # 'delicate_apps.store',
     # 'delicate_apps.invoices',
     # 'delicate_apps.basket',
+    # 'delicate_apps.type', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
