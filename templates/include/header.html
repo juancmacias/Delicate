@@ -1,4 +1,9 @@
+<style>
+  #principal {background: url("{{ url_for('static', path='img/header-image.png') }}") no-repeat center/cover;}
+</style>
 <div id="principal">
+
+
   <header>
     <div class="logo">
       <img src="{{ url_for('static', path='img/logo.png') }}" alt="Delicate Logo" width="120" />
@@ -8,7 +13,7 @@
       <a href="products">Productos</a>
       <a href="about">Sobre Nosotros</a>
       <a href="contact">Contacto</a>
-      <a href="#"><img src="{{ url_for('static', path='img/user.png') }}" alt="" /></a>
+      <a href="login"><img src="{{ url_for('static', path='img/user.png') }}" alt="" /></a>
       <a href="#"><img src="{{ url_for('static', path='img/search.png') }}" alt="" /></a>
       <a href="#"><img src="{{ url_for('static', path='img/shopping.png') }}" alt="" /></a>
     </nav>

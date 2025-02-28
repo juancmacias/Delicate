@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet {{ nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+    <style>
+      .hero {
+        display: none !important;
+      }
+      #principal {
+        background: none !important;
+      }
+    </style>
+    <div id="all">
+      {% include "include/header.html" %}
+      <div class="container-login">
+        <!-- Sección de Login -->
+        <div class="login-section">
+          <h1>LOGIN</h1>
+          <p>Logueate para acceder a tu cuenta</p>
+          <div class="form-group">
+            <input type="email" placeholder="Email" />
+            <input type="password" placeholder="Contraseña" />
+            <div class="checkbox-container">
+              <input type="checkbox" id="remember" />
+              <label for="remember">Remember me</label>
+            </div>
+            <a href="#" class="forgot-password">¿Recuperar contraseña?</a>
+            <button class="login-button">INICIAR SESIÓN</button>
+          </div>
+          <p class="register-text">
+            ¿No tienes una cuenta? <a href="registre">Regístrate</a>
+          </p>
+        </div>
+        <!-- Sección de Imagen -->
+         <style>
+            .image-section {
+                background: url("{{ url_for('static', path='img/login.png') }}") no-repeat center center;
+            }
+         </style>
+
+        <div class="image-section"></div>
+      </div>
+
+      {% include "include/footer.html" %}
+    </div>
+  </body>
+</html>
