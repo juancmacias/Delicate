@@ -122,4 +122,11 @@ Competencia:  Implementar tests para garantizar la calidad del software
 - Uso de Test Unitarios
 - Uso de Test de Integración
 
-¡Buena suerte con tu proyecto! 🍀
+Requisitos:  Python 3.10
+
+```
+# crear entorno -> python -m venv env
+# activar entorno -> env\Scripts\activate
+# instalar  -> pip install -r requirements.txt
+# iniciar el servidor -> uvicorn app.main:app --reload
+```

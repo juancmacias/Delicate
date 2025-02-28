@@ -3,27 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Minimalista</title>
-    <style>
-        body {
-            background-color: #f4f4f4; /* Color 1 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #2c3e50; /* Color 2 */
-            color: #ecf0f1; /* Color 3 */
-            padding: 20px;
-            border-radius: 10px;
-            font-size: 24px;
-            font-family: Arial, sans-serif;
-        }
-    </style>
+    <title>Página Minimalista de {{ nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
 </head>
 <body>
-    <div class="container">Hola Mundo</div>
+    <div class="container">Hola Mundo {{ nombre }}</div>
 </body>
 </html>
