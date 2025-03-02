@@ -13,10 +13,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import sys
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.join(BASE_DIR, 'delicate_apps'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -35,8 +38,6 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     # Comentamos temporalmente las apps hasta que estén configuradas
-    'delicate_apps.company',
-    'delicate_apps.users',
     # 'delicate_apps.store',
     # 'delicate_apps.invoices',
     # 'delicate_apps.basket',
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'delicate_apps.company.apps.CompanyConfig',
+    'delicate_apps.users.apps.UsersConfig',
     # Apps terceros
     'rest_framework',
     'corsheaders',
@@ -90,11 +93,11 @@ WSGI_APPLICATION = 'delicate_manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get("NAME"),
-        'USER': os.environ.get("USER"),
-        'PASSWORD': os.environ.get("PASSWORD"),
-        'HOST': os.environ.get("HOST"),
-        'PORT': os.environ.get("PORT"),
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
+        'PORT': os.environ.get("DB_PORT"),
     }
 }
 
@@ -176,4 +179,6 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 
     }
-    
+
+# Configuración de autenticación personalizada
+AUTH_USER_MODEL = 'users.User'

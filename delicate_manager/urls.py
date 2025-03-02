@@ -20,8 +20,8 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Urls de las aplicaciones
-    # path('api/company/', include('delicate_apps.company.urls')),
-    # path('api/users/', include('delicate_apps.users.urls')),
+    #path('api/company/', include('delicate_apps.company.urls')),
+    #path('api/users/', include('delicate_apps.users.urls')),
     # path('api/store/', include('delicate_apps.store.urls')),
     # path('api/invoices/', include('delicate_apps.invoices.urls')),
     # path('api/basket/', include('delicate_apps.basket.urls')),
