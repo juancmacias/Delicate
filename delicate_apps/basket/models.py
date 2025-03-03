@@ -1,6 +1,6 @@
 from django.db import models
 from delicate_apps.users.models import User
-from delicate_apps.store.models import Product
+from delicate_apps.store.models import StoreProduct
 
 class BasketTemp(models.Model):
     id = models.AutoField(primary_key=True)

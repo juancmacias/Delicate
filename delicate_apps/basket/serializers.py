@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import BasketTemp
 from delicate_apps.users.serializers import UserSerializer
-from delicate_apps.store.serializers import ProductSerializer
+from delicate_apps.store.serializers import StoreProductSerializer
 
 class BasketTempSerializer(serializers.ModelSerializer):
     total = serializers.SerializerMethodField()
@@ -23,4 +23,4 @@ class BasketTempDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
         def get_total(self, obj):
-        return obj.get_total()
+            return obj.get_total()
