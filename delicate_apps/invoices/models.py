@@ -10,7 +10,7 @@ class Invoice(models.Model):
     payment_form = models.CharField(max_length=100, verbose_name='Forma de pago')
     neto = models.FloatField(verbose_name='Importe neto')
 
-    fk_type =models.ForeignKey(
+    fk_type = models.ForeignKey(
         Type,
         on_delete=models.CASCADE,
         db_column='fk_type',
@@ -42,6 +42,7 @@ class Invoice(models.Model):
         verbose_name_plural = 'Facturas'
         db_table = 'invoices'
 
+    # Calculate total for the invoice including all items
     def get_total(self):
         return sum(item.get_subtotal() for item in self.items.all())
 
@@ -71,5 +72,6 @@ class InvoiceItem(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.product.name} en factura {self.invoice.id}"
     
+    # Calculate subtotal for each item
     def get_subtotal(self):
         return self.quantity * self.price
