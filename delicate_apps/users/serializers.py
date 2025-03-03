@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from django.contrib.auth.models import get_user_model
-from rest_framework.serializers import TokenObtainPairSerializer
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 User = get_user_model()
 
@@ -21,4 +21,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['name'] = user.name
         token['roll'] = user.roll
-        return token        
+        return token
+    
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        # Agregar un mensaje en la respuesta del login
+        data['custom_message'] = "Inicio de sesión exitoso"
+        return data      

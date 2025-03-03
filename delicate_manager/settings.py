@@ -47,8 +47,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'delicate_apps.company.apps.CompanyConfig',
-    'delicate_apps.users.apps.UsersConfig',
+    #'delicate_apps.company.apps.CompanyConfig',
+    'delicate_apps.company',
+    #'delicate_apps.users.apps.UsersConfig',
+    'delicate_apps.users',
     # Apps terceros
     'rest_framework',
     'rest_framework_simplejwt',
