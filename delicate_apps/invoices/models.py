@@ -1,3 +1,5 @@
+# models.py
+
 from django.db import models
 from delicate_apps.users.models import User
 from delicate_apps.company.models import Company
@@ -65,7 +67,7 @@ class InvoiceItem(models.Model):
         verbose_name='Producto'
     )
     quantity = models.IntegerField(verbose_name="Cantidad")
-    price = models.FloatField(verbose_name="Precio")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio")
     
     class Meta:
         verbose_name = 'Detalle de factura'
@@ -76,5 +78,6 @@ class InvoiceItem(models.Model):
         return f"{self.quantity} x {self.product.name} en factura {self.invoice.id}"
     
     def get_subtotal(self):
-        return self.quantity * self.price
+        """Calculate subtotal with two decimal places"""
+        subtotal = self.quantity * self.price
         return round(Decimal(str(subtotal)), 2)
