@@ -4,7 +4,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .models import BasketTemp
+from delicate_apps.invoices.models import Invoice, InvoiceItem
+from delicate_apps.store.models import StoreProduct
 from .serializers import BasketTempSerializer, BasketTempDetailSerializer
+from django.utils import timezone
+from django.db import transaction
 
 # Obtain all basket items with optional filtering
 @api_view(['GET'])
@@ -37,15 +41,90 @@ def get_basket_item_by_id(request, id):
             status=status.HTTP_404_NOT_FOUND
         )
 
-# Create a new basket item
+# Add products to the basket
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_basket_item(request):
-    serializer = BasketTempSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+def add_to_basket(request):
+    user_id = request.data.get('user_id')
+    product_id = request.data.get('product_id')
+    cantidad = request.data.get('cantidad', 1)
+    
+    # Verify if the product exists
+    product = get_object_or_404(StoreProduct, pk=product_id)
+    
+    # Verify if the product exists in the basket
+    existing_item = BasketTemp.objects.filter(user_id=user_id, product_id=product_id).first()
+    
+    if existing_item:
+        # If exists, update the quantity
+        existing_item.cantidad += cantidad
+        existing_item.save()
+        serializer = BasketTempSerializer(existing_item)
+        return Response(serializer.data)
+    else:
+        # If not exists, create a new item
+        data = {
+            'user_id': user_id,
+            'product_id': product_id,
+            'cantidad': cantidad,
+            'precio': product.get_total_price(),
+            'temp_date': timezone.now()
+        }
+        serializer = BasketTempSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Create invoice with  basket items
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def checkout(request, user_id):
+    with transaction.atomic():
+        # Obtain all the items in the basket of the user
+        basket_items = BasketTemp.objects.filter(user_id=user_id)
+        
+        if not basket_items.exists():
+            return Response(
+                {"error": "La cesta está vacía"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Total calculation
+        total_amount = sum(item.get_total() for item in basket_items)
+        
+        # Obtain the data from the request
+        payment_form = request.data.get('payment_form', 'Efectivo')
+        company_id = request.data.get('company_id')
+        type_id = request.data.get('type_id')
+        
+        # Create a new invoice
+        invoice = Invoice.objects.create(
+            date=timezone.now().date(),
+            payment_form=payment_form,
+            neto=total_amount,
+            fk_user_id=user_id,
+            fk_company_id=company_id,
+            fk_type_id=type_id
+        )
+        
+        # Create invoice items
+        for basket_item in basket_items:
+            InvoiceItem.objects.create(
+                invoice=invoice,
+                product_id=basket_item.product_id.id,
+                quantity=basket_item.cantidad,
+                price=basket_item.precio
+            )
+        
+        # Empty the basket
+        basket_items.delete()
+        
+        return Response({
+            "message": "Compra completada con éxito",
+            "invoice_id": invoice.id,
+            "total": total_amount
+        }, status=status.HTTP_201_CREATED)
 
 # Update an existing basket item
 @api_view(['PUT'])

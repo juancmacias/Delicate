@@ -1,11 +1,9 @@
 from django.db import migrations, models
 
-
 class Migration(migrations.Migration):
 
-    initial = True
-
     dependencies = [
+        ('type', '0001_initial'),  # Asegúrate de que este nombre coincida con la migración anterior
     ]
 
     operations = [

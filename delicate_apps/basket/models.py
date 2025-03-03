@@ -25,7 +25,7 @@ class BasketTemp(models.Model):
     temp_date = models.DateTimeField(verbose_name="Fecha")
 
     def __str__(self):
-        return f"item de {self.user_ide} - {self.product_id}"
+        return f"item de {self.user_id} - {self.product_id}"
 
     class Meta:
         verbose_name = "Item de cesta temporal"
