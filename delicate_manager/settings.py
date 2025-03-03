@@ -13,10 +13,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import sys
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.join(BASE_DIR, 'delicate_apps'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -35,20 +38,22 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     # Comentamos temporalmente las apps hasta que estén configuradas
-    # 'delicate_apps.company',
-    # 'delicate_apps.users',
-    'delicate_apps.store',
-    'delicate_apps.invoices',
-    'delicate_apps.basket',
-    'delicate_apps.type', 
+    # 'delicate_apps.store',
+    # 'delicate_apps.invoices',
+    # 'delicate_apps.basket',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #'delicate_apps.company.apps.CompanyConfig',
+    'delicate_apps.company',
+    #'delicate_apps.users.apps.UsersConfig',
+    'delicate_apps.users',
     # Apps terceros
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
 ]
@@ -154,4 +159,29 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT AUTHENTICATION CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'LEEWAY': timedelta(seconds=0),
+    'ISSUED_AT': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    }
+
+# Configuración de autenticación personalizada
+AUTH_USER_MODEL = 'users.User'
