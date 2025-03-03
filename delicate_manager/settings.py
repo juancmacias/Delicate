@@ -38,9 +38,10 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     # Comentamos temporalmente las apps hasta que estén configuradas
-    # 'delicate_apps.store',
-    # 'delicate_apps.invoices',
-    # 'delicate_apps.basket',
+    'delicate_apps.store',
+    'delicate_apps.invoices',
+    'delicate_apps.basket',
+    'delicate_apps.type',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
