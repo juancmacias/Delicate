@@ -20,7 +20,7 @@ class InvoiceItemAdmin(admin.ModelAdmin):
 
     def get_price_formatted(self, obj):
         return f"{obj.price:.2f}€"
-    get_price_formatted.short_description = 'Precio'
+    get_price_formatted.short_description = 'Precio (Unidad)'
 
     def get_subtotal_formatted(self, obj):
         return f"{obj.get_subtotal():.2f}€"
