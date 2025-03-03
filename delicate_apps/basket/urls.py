@@ -2,14 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.get_all_basket_items, name='get-all-basket-items'),
-    path('<int:id>/', views.get_basket_item_by_id, name='get-basket-item-by-id'),
-path('create/', views.add_to_basket, name='create-basket-item'),
-    path('<int:id>/update/', views.update_basket_item_by_id, name='update-basket-item'),
-    path('<int:id>/delete/', views.delete_basket_item_by_id, name='delete-basket-item'),
-    path('user/<int:user_id>/', views.get_basket_items_by_user, name='basket-items-by-user'),
-    path('user/<int:user_id>/summary/', views.get_user_basket_summary, name='user-basket-summary'),
-    path('user/<int:user_id>/clear/', views.clear_user_basket, name='clear-user-basket'),
-    path('add/', views.add_to_basket, name='add_to_basket'),
-    path('checkout/<int:user_id>/', views.checkout, name='checkout'),
+    path('basket/', views.get_all_basket_items, name='basket-list'),
+    path('basket/<int:id>/', views.get_basket_item_by_id, name='basket-detail'),
+    path('basket/add/', views.add_to_basket, name='basket-add'),
+    path('basket/update/<int:id>/', views.update_basket_item, name='basket-update'),
+    path('basket/delete/<int:id>/', views.delete_basket_item, name='basket-delete'),
+    path('basket/checkout/', views.checkout, name='basket-checkout'),
 ]
