@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from delicate_apps.users.models import User
 from delicate_apps.store.models import StoreProduct
+from decimal import Decimal, ROUND_HALF_UP
 
 class BasketTemp(models.Model):
     id = models.AutoField(primary_key=True)
@@ -64,11 +65,16 @@ class BasketTemp(models.Model):
             self.precio = self.product_id.net_price
             self.save()
         return self.cantidad * self.precio
+        return round(Decimal(str(total)), 2)
 
     def get_iva(self):
         if hasattr(self.product_id, 'iva'):
-            return self.get_total() * (self.product_id.iva / 100)
-        return 0
+            return round(Decimal(str(total)), 2)
+        return Decimal('0.00')
 
     def get_total_with_iva(self):
         return self.get_total() + self.get_iva()
+        return round(Decimal(str(total)), 2)
+
+    def format_price(self, value):
+        return f"{round(Decimal(str(value)), 2):.2f}€"

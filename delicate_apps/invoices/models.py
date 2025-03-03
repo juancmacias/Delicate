@@ -3,6 +3,7 @@ from delicate_apps.users.models import User
 from delicate_apps.company.models import Company
 from delicate_apps.type.models import Type
 from delicate_apps.store.models import StoreProduct
+from decimal import Decimal, ROUND_HALF_UP
 
 class Invoice(models.Model):
     id = models.AutoField(primary_key=True)
@@ -43,7 +44,11 @@ class Invoice(models.Model):
         return f'Factura {self.id}'
 
     def get_total(self):
-        return sum(item.get_subtotal() for item in self.items.all())
+        total = sum(item.get_subtotal() for item in self.items.all())
+        return round(Decimal(str(total)), 2)
+
+    format_price(self, value):
+        return f"{round(Decimal(str(value)), 2):.2f}€"
 
 class InvoiceItem(models.Model):
     id = models.AutoField(primary_key=True)
@@ -72,3 +77,4 @@ class InvoiceItem(models.Model):
     
     def get_subtotal(self):
         return self.quantity * self.price
+        return round(Decimal(str(subtotal)), 2)
