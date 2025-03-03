@@ -35,8 +35,8 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     # Comentamos temporalmente las apps hasta que estén configuradas
-    'delicate_apps.company',
-    'delicate_apps.users',
+    # 'delicate_apps.company',
+    # 'delicate_apps.users',
     'delicate_apps.store',
     'delicate_apps.invoices',
     'delicate_apps.basket',
