@@ -47,7 +47,7 @@ class Invoice(models.Model):
         total = sum(item.get_subtotal() for item in self.items.all())
         return round(Decimal(str(total)), 2)
 
-    format_price(self, value):
+    def format_price(self, value):
         return f"{round(Decimal(str(value)), 2):.2f}€"
 
 class InvoiceItem(models.Model):
