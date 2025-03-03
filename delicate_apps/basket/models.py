@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from delicate_apps.users.models import User
 from delicate_apps.store.models import StoreProduct
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal
 
 class BasketTemp(models.Model):
     id = models.AutoField(primary_key=True)
@@ -48,33 +48,38 @@ class BasketTemp(models.Model):
                     "El producto no pertenece a la empresa del usuario"
                 )
 
-            # Establish the price if it's not set
+            # Set price if not defined
             if not self.precio:
-                self.precio = self.product_id.net_price
+                self.precio = float(round(Decimal(str(self.product_id.net_price)), 2))
 
     def save(self, *args, **kwargs):
-        # If the price is not set, use the product's net price
+        # Set price based on product if not defined
         if not self.precio and self.product_id:
-            self.precio = self.product_id.net_price
+            self.precio = float(round(Decimal(str(self.product_id.net_price)), 2))
             
         self.full_clean()
         super().save(*args, **kwargs)
 
     def get_total(self):
+        """Calculate total without IVA"""
         if self.precio is None:
-            self.precio = self.product_id.net_price
+            self.precio = float(round(Decimal(str(self.product_id.net_price)), 2))
             self.save()
-        return self.cantidad * self.precio
+        total = self.cantidad * self.precio
         return round(Decimal(str(total)), 2)
 
     def get_iva(self):
+        """Calculate IVA amount"""
         if hasattr(self.product_id, 'iva'):
+            total = float(self.get_total()) * (float(self.product_id.iva) / 100)
             return round(Decimal(str(total)), 2)
         return Decimal('0.00')
 
     def get_total_with_iva(self):
-        return self.get_total() + self.get_iva()
+        """Calculate total with IVA"""
+        total = float(self.get_total()) + float(self.get_iva())
         return round(Decimal(str(total)), 2)
 
     def format_price(self, value):
+        """Format price with two decimals and € symbol"""
         return f"{round(Decimal(str(value)), 2):.2f}€"
