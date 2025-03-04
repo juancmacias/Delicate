@@ -16,7 +16,7 @@ class BasketTempSerializer(serializers.ModelSerializer):
         model = BasketTemp
         fields = [
             'id', 'user_id', 'product_id', 'cantidad', 'precio',
-            'temp_date', 'total', 'product_name', 'product_stock',
+            'temp_date', 'status', 'total', 'product_name', 'product_stock',
             'formatted_price', 'formatted_total'
         ]
 
@@ -84,6 +84,29 @@ class BasketTempDetailSerializer(BasketTempSerializer):
             'email': obj.user_id.email,
             'company': obj.user_id.company.name if obj.user_id.company else None
         }
+
+class BasketTempHistorySerializer(BasketTempSerializer):
+    # Serializer for purchase history
+    invoice_info = serializers.SerializerMethodField()
+
+    class Meta(BasketTempSerializer.Meta):
+        fields = BasketTempSerializer.Meta.fields + ['invoice_info']
+
+    def get_invoice_info(self, obj):
+        # Try to find the invoice that contains this product for this user
+        invoice_items = InvoiceItem.objects.filter(
+            product=obj.product_id,
+            invoice__fk_user=obj.user_id
+        )
+        if invoice_items:
+            # Get the most recent invoice item
+            latest_item = invoice_items.order_by('-invoice__date').first()
+            return {
+                'invoice_id': latest_item.invoice.id,
+                'date': latest_item.invoice.date,
+                'payment_form': latest_item.invoice.payment_form
+            }
+        return None
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
     product_name = serializers.SerializerMethodField()
