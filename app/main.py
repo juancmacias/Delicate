@@ -4,8 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os 
 from dotenv import load_dotenv
-# crear entorno -> python -m venv env
-# activar entorno -> env\Scripts\activate
+# crear entorno -> python -m venv .venv
+# activar entorno -> .venv\Scripts\activate
 # instalar  -> pip install -r requirements.txt
 # iniciar el servidor -> uvicorn app.main:app --reload
 
