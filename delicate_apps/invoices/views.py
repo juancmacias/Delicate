@@ -3,7 +3,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .models import Invoice
+from django.db import transaction
+from .models import Invoice, InvoiceItem
 from .serializers import InvoiceSerializer, InvoiceDetailSerializer
 
 # Obtain all invoices with optional filtering
@@ -47,11 +48,45 @@ def get_invoice_by_id(request, id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_invoice(request):
-    serializer = InvoiceSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    with transaction.atomic():
+        try:
+            # Create invoice
+            invoice_data = {
+                'date': request.data.get('date'),
+                'payment_form': request.data.get('payment_form'),
+                'neto': request.data.get('neto'),
+                'fk_type_id': request.data.get('fk_type'),
+                'fk_user_id': request.data.get('fk_user'),
+                'fk_company_id': request.data.get('fk_company')
+            }
+            
+            invoice_serializer = InvoiceSerializer(data=invoice_data)
+            if not invoice_serializer.is_valid():
+                return Response(invoice_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                
+            invoice = invoice_serializer.save()
+            
+            # Create invoice items if provided
+            items_data = request.data.get('items', [])
+            for item_data in items_data:
+                item_data['invoice'] = invoice.id
+                InvoiceItem.objects.create(
+                    invoice=invoice,
+                    product_id=item_data.get('product'),
+                    quantity=item_data.get('quantity'),
+                    price=item_data.get('price')
+                )
+            
+            # Return the created invoice with details
+            return Response(
+                InvoiceDetailSerializer(invoice).data, 
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Error creating invoice: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 # Update an existing invoice
 @api_view(['PUT'])
@@ -59,7 +94,7 @@ def create_invoice(request):
 def update_invoice_by_id(request, id):
     try:
         invoice = get_object_or_404(Invoice, pk=id)
-        serializer = InvoiceSerializer(invoice, data=request.data)
+        serializer = InvoiceSerializer(invoice, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
