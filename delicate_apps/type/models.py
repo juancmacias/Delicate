@@ -7,7 +7,7 @@ class Type(models.Model):
     def __str__(self):
         return self.name_type
 
-        class Meta:
-            verbose_name = "Tipo de comercio"
-            verbose_name_plural = "Tipos de comercio"
-            db_table = 'type'
+    class Meta:
+        verbose_name = "Tipo de comercio"
+        verbose_name_plural = "Tipos de comercio"
+        db_table = 'type'
