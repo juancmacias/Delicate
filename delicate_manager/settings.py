@@ -38,6 +38,8 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     # Comentamos temporalmente las apps hasta que estén configuradas
+    'delicate_apps.users',
+    'delicate_apps.company',
     'delicate_apps.store',
     'delicate_apps.invoices',
     'delicate_apps.basket',
@@ -49,9 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'delicate_apps.company.apps.CompanyConfig',
-    'delicate_apps.company',
     #'delicate_apps.users.apps.UsersConfig',
-    'delicate_apps.users',
     # Apps terceros
     'rest_framework',
     'rest_framework_simplejwt',
@@ -162,13 +162,16 @@ REST_FRAMEWORK = {
     'DEFAULT AUTHENTICATION CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+        'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 from datetime import timedelta
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,

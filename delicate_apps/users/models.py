@@ -14,7 +14,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('username', email.split('@')[0])  # Añade esta línea
+        #extra_fields.setdefault('username', email.split('@')[0])  # Añade esta línea
         
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -55,6 +55,19 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name', 'company']    
-
+    objects = UserManager()
+    
     def __str__(self):
         return self.email
+
+    def has_perm(self, perm, obj=None):
+        if self.roll == 'admin':
+            return True
+        elif self.roll == 'manager':
+            return perm in ['view_user', 'change_user', 'add_user']
+        elif self.roll == 'employee':
+            return perm in ['view_user']
+        return False
+
+    def has_module_perms(self, app_label):
+        return True
