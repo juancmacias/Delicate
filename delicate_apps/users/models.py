@@ -14,8 +14,6 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        #extra_fields.setdefault('username', email.split('@')[0])  # Añade esta línea
-        
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
@@ -54,7 +52,7 @@ class User(AbstractUser):
     )
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'company']    
+    REQUIRED_FIELDS = ['name', 'company']
     objects = UserManager()
     
     def __str__(self):

@@ -1,8 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    # Redirigir a la página de administración(bbdd local SQLite3)
+    # path('', RedirectView.as_view(url='/admin/'), name='redirect-to-admin'),
     path('admin/', admin.site.urls),
     # Agrupar rutas de la API bajo una versión específica
     path('v1/api/', include([

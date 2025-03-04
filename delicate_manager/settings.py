@@ -31,6 +31,7 @@ SECRET_KEY = 'django-insecure-t1#2dnyy1$o#h38=euicqba8%wfi!-=c7joo7+sbs-^yf_l+x7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
+
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
@@ -94,16 +95,26 @@ WSGI_APPLICATION = 'delicate_manager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
+# Configuración de base de datos
+if os.environ.get('USE_LOCAL_DB', 'False') == 'True':
+    # Configuración para base de datos local SQLite3
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASSWORD"),
+            'HOST': os.getenv("DB_HOST"),
+            'PORT': os.getenv("DB_PORT"),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -186,5 +197,10 @@ SIMPLE_JWT = {
 
     }
 
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'users.auth_backends.CustomBackend',
+]    
 # Configuración de autenticación personalizada
-AUTH_USER_MODEL = 'users.User' 
+AUTH_USER_MODEL = 'users.User'
