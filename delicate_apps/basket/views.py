@@ -8,15 +8,16 @@ from django.db import transaction
 from .models import BasketTemp
 from delicate_apps.invoices.models import Invoice, InvoiceItem
 from delicate_apps.store.models import StoreProduct
-from .serializers import BasketTempSerializer, BasketTempDetailSerializer
+from .serializers import BasketTempSerializer, BasketTempDetailSerializer, BasketTempHistorySerializer
 
 # Obtain all items from the basket
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_all_basket_items(request):
-    # Filtrar por usuario si se proporciona
+    # Filter by user if provided
     user_id = request.query_params.get('user_id')
-    items = BasketTemp.objects.all()
+    # Only return items with status=False (not purchased)
+    items = BasketTemp.objects.filter(status=False)
     
     if user_id:
         items = items.filter(user_id=user_id)
@@ -55,7 +56,7 @@ def add_to_basket(request):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            # Verify product stock and update stock
+            # Verify product stock
             product = get_object_or_404(StoreProduct, pk=product_id)
             if product.stock < quantity:
                 return Response(
@@ -67,6 +68,7 @@ def add_to_basket(request):
             basket_item, created = BasketTemp.objects.get_or_create(
                 user_id_id=user_id,
                 product_id=product,
+                status=False,  # Only get non-purchased items
                 defaults={
                     'cantidad': quantity,
                     'precio': product.get_total_price(),
@@ -75,36 +77,14 @@ def add_to_basket(request):
             )
 
             if not created:
+                # Update quantity if item already exists
                 basket_item.cantidad += quantity
                 basket_item.save()
 
-            # Create auto invoice
-            invoice = Invoice.objects.create(
-                date=timezone.now().date(),
-                payment_form='Efectivo',
-                neto=product.get_total_price() * quantity,
-                fk_user_id=user_id,
-                fk_company=product.fk_company,
-                fk_type=product.fk_type
-            )
-
-            # Create invoice details
-            InvoiceItem.objects.create(
-                invoice=invoice,
-                product=product,
-                quantity=quantity,
-                price=product.get_total_price()
-            )
-
-            # Update stock
-            product.stock -= quantity
-            product.save()
-
             serializer = BasketTempSerializer(basket_item)
             return Response({
-                "message": "Producto añadido y factura generada",
-                "item": serializer.data,
-                "invoice_id": invoice.id
+                "message": "Producto añadido al carrito correctamente",
+                "item": serializer.data
             }, status=status.HTTP_201_CREATED)
 
         except Exception as e:
@@ -112,6 +92,28 @@ def add_to_basket(request):
                 {"error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+                
+# Get purchase history for a user
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_basket_history(request):
+    try:
+        user_id = request.query_params.get('user_id')
+        if not user_id:
+            return Response(
+                {"error": "Se requiere el ID de usuario"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        # Get all purchased items (status=True)
+        history_items = BasketTemp.objects.filter(user_id=user_id, status=True)
+        serializer = BasketTempHistorySerializer(history_items, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 # Update an item in the basket
 @api_view(['PUT'])
@@ -119,7 +121,7 @@ def add_to_basket(request):
 def update_basket_item(request, id):
     with transaction.atomic():
         try:
-            item = get_object_or_404(BasketTemp, pk=id)
+            item = get_object_or_404(BasketTemp, pk=id, status=False)  # Only update non-purchased items
 
             # Validate new quantity if provided
             new_quantity = request.data.get('cantidad')
@@ -151,7 +153,7 @@ def update_basket_item(request, id):
 @permission_classes([IsAuthenticated])
 def delete_basket_item(request, id):
     try:
-        item = get_object_or_404(BasketTemp, pk=id)
+        item = get_object_or_404(BasketTemp, pk=id, status=False)  # Only delete non-purchased items
         item.delete()
         return Response(
             {"message": "Item eliminado correctamente"},
@@ -171,8 +173,8 @@ def checkout(request):
         try:
             user_id = request.data.get('user_id')
             
-            # Verify items in the basket
-            basket_items = BasketTemp.objects.filter(user_id=user_id)
+            # Verify items in the basket (only non-purchased items)
+            basket_items = BasketTemp.objects.filter(user_id=user_id, status=False)
             if not basket_items.exists():
                 return Response(
                     {"error": "El carrito está vacío"},
@@ -182,7 +184,7 @@ def checkout(request):
             # Total calculation
             total = sum(item.get_total() for item in basket_items)
 
-            # Create  invoice
+            # Create invoice
             invoice = Invoice.objects.create(
                 date=timezone.now().date(),
                 payment_form=request.data.get('payment_form', 'Efectivo'),
@@ -192,7 +194,7 @@ def checkout(request):
                 fk_type_id=request.data.get('type_id')
             )
 
-            # Create invoice and invoice details
+            # Create invoice items and update stock
             for item in basket_items:
                 InvoiceItem.objects.create(
                     invoice=invoice,
@@ -201,13 +203,14 @@ def checkout(request):
                     price=item.precio
                 )
                 
-                # Update stock
+                # Update product stock
                 product = item.product_id
                 product.stock -= item.cantidad
                 product.save()
-
-            # Clean basket
-            basket_items.delete()
+                
+                # Mark item as purchased instead of deleting
+                item.status = True
+                item.save()
 
             return Response({
                 "message": "Compra procesada correctamente",
