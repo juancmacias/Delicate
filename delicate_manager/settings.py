@@ -121,8 +121,12 @@ elif USE_SQLITE:
     # Configuración SQLite3 (para desarrollo local)
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv("LOCAL_DB_NAME", "delicate_local"),
+            'USER': os.getenv("LOCAL_DB_USER", "postgres"),
+            'PASSWORD': os.getenv("LOCAL_DB_PASSWORD", "postgres"),
+            'HOST': os.getenv("LOCAL_DB_HOST", "localhost"),
+            'PORT': os.getenv("LOCAL_DB_PORT", "5432"),
         }
     }
 else:
