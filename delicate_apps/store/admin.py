@@ -46,3 +46,19 @@ class StoreProductAdmin(admin.ModelAdmin):
             'fields': ('fk_company', 'fk_type')
         }),
     )
+
+@admin.register(StockMovement)
+class StockMovementAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'movement_type', 'quantity', 'previous_stock', 
+                   'new_stock', 'user', 'created_at')
+    list_filter = ('movement_type', 'product__category', 'created_at')
+    search_fields = ('product__name', 'notes')
+    readonly_fields = ('product', 'movement_type', 'quantity', 'previous_stock', 
+                      'new_stock', 'user', 'created_at')
+    date_hierarchy = 'created_at'
+    
+    def has_add_permission(self, request):
+        return False
+    
+    def has_change_permission(self, request, obj=None):
+        return False  # Stock movements should not be modified
