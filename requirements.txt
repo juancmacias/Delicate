@@ -13,7 +13,7 @@ pyjwt==2.9.0
 python-dotenv==1.0.1
 sqlparse==0.5.3
 typing-extensions==4.12.2
-pandas==2.2.0cloudinary==1.42.2
+pandas==2.2.0
 cloudinary==1.42.2
 django-cloudinary-storage==0.3.0
 
