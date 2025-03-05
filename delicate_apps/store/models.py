@@ -24,8 +24,8 @@ class StoreProduct(models.Model):
     # Media
     image = CloudinaryField(
         'image', 
-        blank=True, 
-        null=True, 
+        blank=False,
+        null=False, 
         help_text='Imagen del producto',
         transformation=[
             {'width': 500, 'height': 500, 'crop': 'limit'},

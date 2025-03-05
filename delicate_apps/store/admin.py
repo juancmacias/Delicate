@@ -68,8 +68,15 @@ class StoreProductAdmin(admin.ModelAdmin):
                    'stock', 'get_stock_status', 'fk_company')
     list_filter = ('category', 'fk_company', 'fk_type')
     search_fields = ('name', 'category', 'description')
-    readonly_fields = ('stock', 'stock_inicial', 'amount')
+    readonly_fields = ('stock', 'stock_inicial', 'amount', 'image_preview')
     inlines = [StockMovementInline]
+    
+    def image_preview(self, obj):
+        """Display a preview of the product image"""
+        if obj.image:
+            return format_html('<img src="{}" style="max-height: 200px; max-width: 300px;" />', obj.image.url)
+        return "No image available"
+    image_preview.short_description = "Vista previa"
     
     def get_price_display(self, obj):
         """Display formatted net price"""
@@ -136,8 +143,8 @@ class StoreProductAdmin(admin.ModelAdmin):
             'description': 'El stock actual se actualiza automáticamente cuando se realizan ventas o ajustes manuales.'
         }),
         ('Imagen', {
-            'fields': ('image',),
-            'classes': ('collapse',),
+            'fields': ('image', 'image_preview'),
+            'description': 'Sube una imagen para el producto (obligatorio)',
         }),
         ('Relaciones', {
             'fields': ('fk_company', 'fk_type')
