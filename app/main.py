@@ -1,5 +1,6 @@
 from fastapi import FastAPI, APIRouter, Request, Form, HTTPException, status, File, UploadFile, Depends, Cookie, Response
 from typing import Annotated
+import psycopg2
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 from fastapi_versioning import VersionedFastAPI, version
 from fastapi.staticfiles import StaticFiles
@@ -8,7 +9,10 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-import app.config as conf
+from sqlalchemy.orm import Session
+#import app.models.crud 
+from app.models.crud import obtener_Company, obtener_Products
+from app.models.database import get_db
 
 
 import os 
@@ -19,8 +23,10 @@ from dotenv import load_dotenv
 # instalar  -> pip install -r requirements.txt
 # iniciar el servidor -> uvicorn app.main:app --reload <<<<----- nop
 # ejecutar el servidor -> python main.py
+# para leer el .env
 
-load_dotenv()
+dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
+load_dotenv(dotenv_path)
 app = FastAPI(
     title="API de market place",
     description="Esta api maneja los elementos para mostrar los productos de la tienda con FastAPI",
@@ -38,7 +44,7 @@ nombre = "marie"
 # Configuración
 #SECRET_KEY = "secret_key_123"
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
+ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 # Base de datos simulada
 # secret
@@ -79,6 +85,8 @@ def create_access_token(data: dict, expires_delta: timedelta):
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+def compay_data(db: Session = Depends(get_db)):
+    return obtener_Company(db, 1)
 
 # Ruta para obtener el token
 @api_v1.post("/token")
@@ -114,40 +122,43 @@ async def favicon():
 
 # Rutas
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
+async def home(request: Request, company_data = Depends(compay_data)):
+    
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "nombre": nombre
+        "company": company_data
     })
 
 # Detalles de producto
 @app.get("/details/{id}", response_class=HTMLResponse)
-async def detalails(request: Request, id: int):
+async def detalails(request: Request, id: int, company_data = Depends(compay_data)):
     return templates.TemplateResponse("details.html", {
         "request": request,
-        "nombre": id
+        "company": company_data
     })
 
 # hacer el login
 @app.get("/login", response_class=HTMLResponse)
-async def login(request: Request ):
+async def login(request: Request, company_data = Depends(compay_data)):
         return templates.TemplateResponse("login.html", {
         "request": request,
+        "company": company_data
     })
 
 # perfil de usuario
 @app.get("/users", response_class=HTMLResponse)
-async def read_users_me(request: Request):
+async def read_users_me(request: Request, company_data = Depends(compay_data)):
     return templates.TemplateResponse("user.html", {
         "request": request,
+        "company": company_data
     })
 
 # registro de usuario
 @app.get("/registre", response_class=HTMLResponse)
-async def register(request: Request):
+async def register(request: Request, company_data = Depends(compay_data)):
     return templates.TemplateResponse("registre.html", {
         "request": request,
-        "nombre": nombre
+        "nombre": company_data
     })
 
 
