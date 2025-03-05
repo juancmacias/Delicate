@@ -142,11 +142,6 @@ class StoreProductAdmin(admin.ModelAdmin):
         ('Relaciones', {
             'fields': ('fk_company', 'fk_type')
         }),
-        ('Campos obsoletos', {
-            'fields': ('stock_inicial', 'amount'),
-            'classes': ('collapse',),
-            'description': 'Estos campos se mantienen por compatibilidad pero no deberían usarse.'
-        }),
     )
 
 @admin.register(StockMovement)
