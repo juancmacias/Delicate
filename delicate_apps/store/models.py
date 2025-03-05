@@ -2,28 +2,17 @@ from django.db import models
 from delicate_apps.company.models import Company
 from delicate_apps.type.models import Type
 from django.db.models import Sum
-from django.utils import timezone
 
 class StoreProduct(models.Model):
-    # Basic product info
     id = models.AutoField(primary_key=True)
+    iva = models.FloatField(verbose_name='IVA')
+    category = models.CharField(max_length=50, verbose_name='Categoría')
     name = models.CharField(max_length=100, verbose_name='Nombre')
     description = models.CharField(max_length=250, verbose_name='Descripción')
-    category = models.CharField(max_length=50, verbose_name='Categoría')
-    
-    # Pricing and taxes
-    net_price = models.FloatField(verbose_name='Precio neto')
-    iva = models.FloatField(verbose_name='IVA')
-    
-    # Stock management (keeping legacy fields but using stock as primary)
-    amount = models.CharField(max_length=100, verbose_name='Cantidad (obsoleto)')
-    stock_inicial = models.IntegerField(verbose_name='Stock inicial (obsoleto)', default=0)
-    stock = models.IntegerField(verbose_name='Stock disponible', default=0)
-    
-    # Media
+    amount = models.CharField(max_length=100, verbose_name='Cantidad')
+    stock_inicial = models.IntegerField(verbose_name='Stock inicial', default=0)
     image = models.CharField(max_length=255, verbose_name='Imagen', blank=True, null=True)
-    
-    # Relations
+    net_price = models.FloatField(verbose_name='Precio neto')
     fk_company = models.ForeignKey(
         Company,
         on_delete=models.CASCADE,
@@ -48,98 +37,32 @@ class StoreProduct(models.Model):
         return self.name
 
     def get_total_price(self):
-        """Calculate price with IVA included"""
         return self.net_price * (1 + (self.iva / 100))
-    
-    def get_formatted_price(self):
-        """Return formatted price with two decimals and € symbol"""
-        return f"{self.net_price:.2f} €"
-    
-    def get_formatted_total_price(self):
-        """Return price with IVA formatted with two decimals and € symbol"""
-        return f"{self.get_total_price():.2f} €"
-    
+
     def get_unidades_vendidas(self):
-        """Calculate total units sold"""
+        """Calcula el total de unidades vendidas"""
         from delicate_apps.invoices.models import InvoiceItem
         vendidas = InvoiceItem.objects.filter(product=self).aggregate(
             total=Sum('quantity'))['total'] or 0
         return vendidas
-    
-    def add_stock(self, cantidad, user=None, notes=""):
-        """Add units to stock and register the movement"""
+
+    def get_stock_actual(self):
+        """Calcula el stock actual basado en inventario inicial menos ventas"""
+        return self.stock_inicial - self.get_unidades_vendidas()
+
+    def add_stock(self, cantidad):
+        """Añade unidades al stock inicial"""
         if cantidad > 0:
-            old_stock = self.stock
-            self.stock += cantidad
+            self.stock_inicial += cantidad
             self.save()
-            
-            # Register movement
-            StockMovement.objects.create(
-                product=self,
-                movement_type='add',
-                quantity=cantidad,
-                previous_stock=old_stock,
-                new_stock=self.stock,
-                user=user,
-                notes=notes
-            )
             return True
         return False
 
-    def remove_stock(self, cantidad, user=None, notes=""):
-        """Remove units from stock and register the movement"""
-        if cantidad > 0 and self.stock >= cantidad:
-            old_stock = self.stock
-            self.stock -= cantidad
+    def remove_stock(self, cantidad):
+        """Resta unidades del stock inicial"""
+        stock_actual = self.get_stock_actual()
+        if cantidad > 0 and stock_actual >= cantidad:
+            self.stock_inicial -= cantidad
             self.save()
-            
-            # Register movement
-            StockMovement.objects.create(
-                product=self,
-                movement_type='remove',
-                quantity=cantidad,
-                previous_stock=old_stock,
-                new_stock=self.stock,
-                user=user,
-                notes=notes
-            )
             return True
         return False
-    
-    def get_stock_movements(self, limit=10):
-        """Return the latest stock movements for this product"""
-        return StockMovement.objects.filter(product=self).order_by('-created_at')[:limit]
-
-
-class StockMovement(models.Model):
-    """Model to register stock movements"""
-    MOVEMENT_TYPES = [
-        ('add', 'Entrada'),
-        ('remove', 'Salida'),
-        ('sale', 'Venta'),
-        ('adjustment', 'Ajuste'),
-        ('initial', 'Stock Inicial'),
-    ]
-    
-    id = models.AutoField(primary_key=True)
-    product = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, related_name='stock_movements')
-    movement_type = models.CharField(max_length=20, choices=MOVEMENT_TYPES)
-    quantity = models.IntegerField()
-    previous_stock = models.IntegerField()
-    new_stock = models.IntegerField()
-    user = models.ForeignKey(
-        'users.User', 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True
-    )
-    notes = models.TextField(blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
-    
-    class Meta:
-        verbose_name = 'Movimiento de Stock'
-        verbose_name_plural = 'Movimientos de Stock'
-        ordering = ['-created_at']
-    
-    def __str__(self):
-        return f"{self.get_movement_type_display()} de {self.quantity} unidades para {self.product.name}"
