@@ -11,7 +11,7 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 #import app.models.crud 
-from app.models.crud import obtener_Company, obtener_Products
+from app.models.crud import obtener_Company, obtener_Products, obtener_Product_por_id
 from app.models.database import get_db
 
 
@@ -122,19 +122,22 @@ async def favicon():
 
 # Rutas
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request, company_data = Depends(compay_data)):
-    
+async def home(request: Request, company_data = Depends(compay_data), db: Session = Depends(get_db) ):
+    all_products = obtener_Products(db)
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "company": company_data
+        "company": company_data,
+        "all_products": all_products
     })
 
 # Detalles de producto
 @app.get("/details/{id}", response_class=HTMLResponse)
-async def detalails(request: Request, id: int, company_data = Depends(compay_data)):
+async def detalails(request: Request, id: int, company_data = Depends(compay_data), db: Session = Depends(get_db)):
+    detalails = obtener_Product_por_id(db, id)
     return templates.TemplateResponse("details.html", {
         "request": request,
-        "company": company_data
+        "company": company_data,
+        "detalails": detalails
     })
 
 # hacer el login

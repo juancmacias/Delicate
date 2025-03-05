@@ -21,19 +21,17 @@
       <div id="lista-Productos" class="container">
         <div class="image-container">
           <img
-            src="{{ url_for('static', path='img/productos/12345.png') }}"
-            alt="Kimchi Mango Truffle"
+            src="{{ detalails.image }}"
+            alt="{{ detalails.name }}"
           />
         </div>
         <div class="product-info">
-          <h1 class="cinzel-thin name">LOREM IPSUM</h1>
-          <p class="price precio"><span>11.00</span> €</p>
+          <h1 class="cinzel-thin name">{{ detalails.name }}</h1>
+          <p class="price precio"><span>{{ detalails.net_price  }}</span> €</p>
 
-          <button class="raleway-thin button agregar-carrito" data-id="3">Agragar a la cesta</button>
+          <button class="raleway-thin button agregar-carrito" data-id="{{ detalails.id }}">Agragar a la cesta</button>
           <p class="description">
-            Lorem Ipsum es simplemente el texto de relleno de las imprentas y
-            archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar
-            de la industria desde el siglo XVI...
+            {{ detalails.description }}
           </p>
         </div>
       </div>

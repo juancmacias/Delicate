@@ -7,23 +7,33 @@
     <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
   </head>
   <body>
-
-
     <div id="all">
       {% include "include/header.html" %}
       <section class="products">
         <h2 class="cinzel-thin">Nuestros Productos</h2>
         <div id="lista-Productos" class="product-grid">
+          <!-- listado de productos-->
+          {% for producto in all_products %}
+          {% set iva = producto["neto_price"] * (producto["iva"] / 100) %}
+          {% set precio_total = producto["neto_precio"] + iva %}
+
           <div class="card">
-            <a href="/details/1" target="_top" title="Queso Brie">
-              <img src="{{ url_for('static', path='img/productos/12345.png') }}" alt="Kimchi Mango Truffle">
+            <a href="/details/{{ producto['id'] }}"
+              target="_top"
+              title="{{ producto['name'] }}"
+            >
+              <img src="{{ producto['image'] }}" alt="{{ producto['name'] }}" />
             </a>
             <div class="precio_producto">
-                <p class="name">Queso Brie</p>
-                <p class="precio"><span>1.00</span> €</p>
+              <p class="name">{{ producto['name'] }}</p>
+              <p class="precio"><span>{{ precio_total }}</span> €</p>
             </div>
-              <button class="raleway-thin agregar-carrito" data-id="1">Comprar</button>
+            <button class="raleway-thin agregar-carrito" data-id="{{ producto['id'] }}">
+              Comprar
+            </button>
           </div>
+          {% endfor %}
+          <!-- fin listado de productos-->
           <div class="product">
             <img src="product1.jpg" alt="Queso Brie" width="100%" />
             <p>Queso Brie - 00.00€</p>
@@ -36,8 +46,7 @@
           </div>
         </div>
       </section>
-      {% include "include/about.html" %}
-      {% include "include/footer.html" %}
+      {% include "include/about.html" %} {% include "include/footer.html" %}
     </div>
   </body>
 </html>
