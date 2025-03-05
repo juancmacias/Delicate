@@ -3,6 +3,7 @@ from delicate_apps.company.models import Company
 from delicate_apps.type.models import Type
 from django.db.models import Sum
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 class StoreProduct(models.Model):
     # Basic product info
@@ -21,7 +22,17 @@ class StoreProduct(models.Model):
     stock = models.IntegerField(verbose_name='Stock disponible', default=0)
     
     # Media
-    image = models.CharField(max_length=255, verbose_name='Imagen', blank=True, null=True)
+    image = CloudinaryField(
+        'image', 
+        blank=True, 
+        null=True, 
+        help_text='Imagen del producto',
+        transformation=[
+            {'width': 500, 'height': 500, 'crop': 'limit'},
+            {'quality': 'auto'},
+            {'fetch_format': 'auto'}
+        ]
+    )
     
     # Relations
     fk_company = models.ForeignKey(

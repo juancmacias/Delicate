@@ -6,6 +6,7 @@ from delicate_apps.company.serializers import CompanySerializer
 class StoreProductSerializer(serializers.ModelSerializer):
     total_price = serializers.SerializerMethodField()
     stock_status = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
     
     class Meta:
         model = StoreProduct
@@ -27,10 +28,14 @@ class StoreProductDetailSerializer(serializers.ModelSerializer):
     fk_company = CompanySerializer(read_only=True)
     total_price = serializers.SerializerMethodField()
     stock_status = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
     
     class Meta:
         model = StoreProduct
         fields = '__all__'
+        extraa_kwargs = {
+            'image': {'required': False}
+        }
     
     # Calculate and return the total price with IVA included
     def get_total_price(self, obj):
@@ -43,3 +48,9 @@ class StoreProductDetailSerializer(serializers.ModelSerializer):
         elif obj.stock < 5:
             return f"¡Últimas {obj.stock} unidades!"
         return f"Disponible ({obj.stock} en stock)"
+
+    # Get the image URL
+    def get_image_url(self, obj):
+        if obj.image:
+            return obj.image.url
+        return None

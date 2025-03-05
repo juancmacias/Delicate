@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import sys
+import cloudinary.uploader
+import cloudinary.api
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -57,6 +59,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
+    # Cloudinary apps (añadidas aquí una sola vez)
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -94,16 +99,34 @@ WSGI_APPLICATION = 'delicate_manager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
+# Determinar si se usa la base de datos local o remota
+USE_LOCAL_DB = os.environ.get('USE_LOCAL_DB', 'False') == 'True'
+
+if USE_LOCAL_DB:
+    # Configuración de base de datos local
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv("LOCAL_DB_NAME", "delicate_local"),
+            'USER': os.getenv("LOCAL_DB_USER", "postgres"),
+            'PASSWORD': os.getenv("LOCAL_DB_PASSWORD", "postgres"),
+            'HOST': os.getenv("LOCAL_DB_HOST", "localhost"),
+            'PORT': os.getenv("LOCAL_DB_PORT", "5432"),
+        }
     }
-}
+else:
+    # Configuración de base de datos remota (la actual)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASSWORD"),
+            'HOST': os.getenv("DB_HOST"),
+            'PORT': os.getenv("DB_PORT"),
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -187,3 +210,20 @@ SIMPLE_JWT = {
 
 # Configuración de autenticación personalizada
 AUTH_USER_MODEL = 'users.User' 
+
+# Cloudinary Storage Configuration
+# Configuración de Cloudinary usando variables de entorno
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET')
+)
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET')
+}
+
+# Configura el storage por defecto
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
