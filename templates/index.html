@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet {{ nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+
+
+    <div id="all">
+      {% include "include/header.html" %}
+      <section class="products">
+        <h2 class="cinzel-thin">Nuestros Productos</h2>
+        <div id="lista-Productos" class="product-grid">
+          <div class="card">
+            <a href="/details/1" target="_top" title="Queso Brie">
+              <img src="{{ url_for('static', path='img/productos/12345.png') }}" alt="Kimchi Mango Truffle">
+            </a>
+            <div class="precio_producto">
+                <p class="name">Queso Brie</p>
+                <p class="precio"><span>1.00</span> €</p>
+            </div>
+              <button class="raleway-thin agregar-carrito" data-id="1">Comprar</button>
+          </div>
+          <div class="product">
+            <img src="product1.jpg" alt="Queso Brie" width="100%" />
+            <p>Queso Brie - 00.00€</p>
+            <button class="raleway-thin">Comprar</button>
+          </div>
+          <div class="product">
+            <img src="product1.jpg" alt="Queso Brie" width="100%" />
+            <p>Queso Brie - 00.00€</p>
+            <button class="raleway-thin">Comprar</button>
+          </div>
+        </div>
+      </section>
+      {% include "include/about.html" %}
+      {% include "include/footer.html" %}
+    </div>
+  </body>
+</html>

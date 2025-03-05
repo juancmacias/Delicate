@@ -4,3 +4,8 @@ uvicorn
 psycopg2-binary
 python-dotenv
 dotenv
+typing
+python-multipart
+python-jose[cryptography]
+passlib[bcrypt]
+fastapi-versioning

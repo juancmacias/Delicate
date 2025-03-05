@@ -1,0 +1,95 @@
+import app.models as models
+from sqlmodel import SQLModel, Field
+from decimal import Decimal
+
+class Invoice(models.Model):
+    # Basic invoice info
+    id = models.AutoField(primary_key=True)
+    date = models.DateField(verbose_name='Fecha')
+    payment_form = models.CharField(max_length=100, verbose_name='Forma de pago')
+    neto = models.FloatField(verbose_name='Importe neto')
+
+    # Relations
+    fk_type = models.ForeignKey(
+        models.Type,
+        on_delete=models.CASCADE,
+        db_column='fk_type',
+        related_name='invoices',
+        verbose_name='Tipo'
+    )
+    fk_user = models.ForeignKey(
+        models.User,
+        on_delete=models.CASCADE,
+        db_column='fk_user',
+        related_name='invoices',
+        verbose_name='Usuario'
+    )
+    fk_company = models.ForeignKey(
+        models.Company,
+        on_delete=models.CASCADE,
+        db_column='fk_company',
+        related_name='invoices',
+        verbose_name='Empresa'
+    )
+
+    class Meta:
+        verbose_name = 'Factura'
+        verbose_name_plural = 'Facturas'
+        db_table = 'invoices'
+
+    def str(self):
+        return f'Factura {self.id} - {self.date}'
+
+    def get_total(self):
+        """Calculate total amount including IVA"""
+        # Sum all invoice items to get the total
+        if hasattr(self, 'items'):
+            total = sum(item.get_total() for item in self.items.all())
+            return round(Decimal(str(total)), 2)
+        return round(Decimal(str(self.neto)), 2)
+
+    def get_iva_amount(self):
+        """Calculate total IVA amount"""
+        if hasattr(self, 'items'):
+            total_iva = sum(item.get_iva_amount() for item in self.items.all())
+            return round(Decimal(str(total_iva)), 2)
+        return Decimal('0')
+
+class InvoiceItem(models.Model):
+    id = models.AutoField(primary_key=True)
+    invoice = models.ForeignKey(
+        Invoice,
+        on_delete=models.CASCADE,
+        related_name='items',
+        verbose_name='Factura'
+    )
+    product = models.ForeignKey(
+        models.StoreProduct,
+        on_delete=models.CASCADE,
+        verbose_name='Producto'
+    )
+    quantity = models.IntegerField(verbose_name='Cantidad')
+    price = models.FloatField(verbose_name='Precio unitario')
+
+    class Meta:
+        verbose_name = 'Detalle de factura'
+        verbose_name_plural = 'Detalles de factura'
+        db_table = 'invoice_items'
+
+    def str(self):
+        return f'Item {self.id} - Factura {self.invoice.id}'
+
+    def get_total(self):
+        """Calculate the total for this item without IVA"""
+        return round(Decimal(str(self.price * self.quantity)), 2)
+
+    def get_iva_amount(self):
+        """Calculate the IVA amount for this item"""
+        if hasattr(self.product, 'iva'):
+            iva_rate = Decimal(str(self.product.iva)) / 100
+            return round(self.get_total() * iva_rate, 2)
+        return Decimal('0')
+
+    def get_total_with_iva(self):
+        """Calculate the total for this item with IVA"""
+        return self.get_total() + self.get_iva_amount()
