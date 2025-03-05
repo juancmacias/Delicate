@@ -10,19 +10,51 @@
     </div>
     <nav>
       <a href="/">Home</a>
-      <a href="products">Productos</a>
-      <a href="about">Sobre Nosotros</a>
-      <a href="contact">Contacto</a>
-      <a href="login"><img src="{{ url_for('static', path='img/user.png') }}" alt="" /></a>
+      <a href="/products">Productos</a>
+      <a href="/about">Sobre Nosotros</a>
+      <a href="/contact">Contacto</a>
+      <div class="menu"><img class="menu-btn" src="{{ url_for('static', path='img/user.png') }}" alt="" />
+        <div class="menu-content" id="menuContent">
+          <a href="#" id="loginLink">Iniciar sesión</a>
+          <a href="#" id="logoutLink" style="display:none;">Cerrar sesión</a>
+        </div>
+      </a>
       <a href="#"><img src="{{ url_for('static', path='img/search.png') }}" alt="" /></a>
-      <a href="#"><img src="{{ url_for('static', path='img/shopping.png') }}" alt="" /></a>
+      <div class="submenu">
+        
+        <img src="{{ url_for('static', path='img/shopping.png') }}" class="submenu" id="img-carrito" alt="carrito">
+        <span id="cart_menu_num" data-action="cart-can" class="badge rounded-circle"></span>
+            <div id="carrito">
+                <table id="lista-carrito" class="u-full-width">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                    </tbody>
+                </table>
+                <div id="total">
+                  <p id="suma">Total: 0€</p>
+                  <a href="#" id="vaciar-carrito" class="button u-full-width">Vaciar Carrito</a>
+                  <a href="#"  class="button u-full-width">Terminar compra</a>
+                </div>
+            </div>
+        </div>
     </nav>
   </header>
   <section class="hero">
     <h1 class="cinzel-thin">El Lujo De Lo Auténtico, El Placer De Lo Gourmet</h1>
     <div class="buttons">
-      <button class="btn">Registrarse</button>
-      <button class="btn">Login</button>
+      <a href="/registre"><button class="btn">Registrarse</button></a>
+      
+      <a href="/login"><button class="btn">Login</button></a>
+      
     </div>
   </section>
 </div>

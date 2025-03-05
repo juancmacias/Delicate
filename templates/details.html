@@ -14,10 +14,11 @@
       #principal {
         background: none !important;
       }
+
     </style>
     <div id="all">
       {% include "include/header.html" %}
-      <div class="container">
+      <div id="lista-Productos" class="container">
         <div class="image-container">
           <img
             src="{{ url_for('static', path='img/productos/12345.png') }}"
@@ -25,9 +26,10 @@
           />
         </div>
         <div class="product-info">
-          <h1 class="cinzel-thin">LOREM IPSUM</h1>
-          <p class="price">00.00€</p>
-          <button class="raleway-thin button">COMPRAR</button>
+          <h1 class="cinzel-thin name">LOREM IPSUM</h1>
+          <p class="price precio"><span>11.00</span> €</p>
+
+          <button class="raleway-thin button agregar-carrito" data-id="3">Agragar a la cesta</button>
           <p class="description">
             Lorem Ipsum es simplemente el texto de relleno de las imprentas y
             archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar
