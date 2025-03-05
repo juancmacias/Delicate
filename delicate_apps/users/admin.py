@@ -39,6 +39,15 @@ class UserAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         """Personalizar cómo se guarda el modelo desde el admin"""
-        # El método create_user del UserManager se encargará de generar un username
-        # si no se ha proporcionado uno
-        super().save_model(request, obj, form, change)
+        if not change:  # Si es un nuevo usuario
+            # Guardar la contraseña original
+            password = obj.password
+            # Hashear la contraseña
+            obj.set_password(password)
+            # Guardar el objeto original (en lugar de crear uno nuevo)
+            obj.save()
+        else:
+            # Si es una actualización, verificar si la contraseña ha cambiado
+            if form.cleaned_data.get('password') != form.initial.get('password'):
+                obj.set_password(form.cleaned_data.get('password'))
+            obj.save()
