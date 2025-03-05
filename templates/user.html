@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet {{ nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+    <style>
+      .hero {
+        display: none !important;
+      }
+      #principal {
+        background: none !important;
+      }
+    </style>
+    <div id="all">
+      {% include "include/header.html" %}
+      <div class="container_user">
+        <h1 class="cinzel-thin">MI PERFIL</h1>
+        <hr />
+        <!-- Formulario de edición -->
+        <section class="profile-form">
+          <h2 class="cinzel-thin">Modifica tu información</h2>
+          <form>
+            <input name="name" type="text" placeholder="Nombre" value="{{ nombre }}" />
+            <input name="first_name" type="text" placeholder="Apellido" value="{{ apellido }}" />
+            <input name="email" type="email" placeholder="Email" value="{{ email }}" />
+            <input name="re_email" type="email" placeholder="Confirma tu email"  />
+            <div class="password-container">
+              <input type="password" id="password" placeholder="Contraseña" value="{{ password }}" />
+              <span class="toggle-password" onclick="togglePassword('password')"
+                >👁️</span
+              >
+            </div>
+            <div class="password-container">
+              <input
+                type="password"
+                id="confirm-password"
+                placeholder="Confirma la contraseña"
+              />
+              <span
+                class="toggle-password"
+                onclick="togglePassword('confirm-password')"
+                >👁️</span
+              >
+            </div>
+            <button type="submit" class="save-button">GUARDAR CAMBIOS</button>
+          </form>
+        </section>
+        <!-- Historial de pedidos -->
+        <section class="order-history">
+          <h2>Historial de pedidos</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Fecha</th>
+                <th>Precio Total</th>
+                <th>Nº Artículos</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+              <!-- listar los pedidos-->
+              <tr>
+                <td>1</td>
+                <td>10/01/2025</td>
+                <td>170€</td>
+                <td>7</td>
+              </tr>
+              <!-- fin lista de pedidos-->
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      {% include "include/footer.html" %}
+    </div>
+    <script>
+      function togglePassword(id) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+          input.type = "text";
+        } else {
+          input.type = "password";
+        }
+      }
+
+
+      </script>
+  </body>
+</html>

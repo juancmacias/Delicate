@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet {{ nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+    <style>
+      .hero {
+        display: none !important;
+      }
+      #principal {
+        background: none !important;
+      }
+
+    </style>
+    <div id="all">
+      {% include "include/header.html" %}
+      <div id="lista-Productos" class="container">
+        <div class="image-container">
+          <img
+            src="{{ url_for('static', path='img/productos/12345.png') }}"
+            alt="Kimchi Mango Truffle"
+          />
+        </div>
+        <div class="product-info">
+          <h1 class="cinzel-thin name">LOREM IPSUM</h1>
+          <p class="price precio"><span>11.00</span> €</p>
+
+          <button class="raleway-thin button agregar-carrito" data-id="3">Agragar a la cesta</button>
+          <p class="description">
+            Lorem Ipsum es simplemente el texto de relleno de las imprentas y
+            archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar
+            de la industria desde el siglo XVI...
+          </p>
+        </div>
+      </div>
+
+      {% include "include/footer.html" %}
+    </div>
+  </body>
+</html>
