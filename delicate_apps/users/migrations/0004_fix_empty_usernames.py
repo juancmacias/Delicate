@@ -20,7 +20,7 @@ def fix_empty_usernames(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0003_fix_admin_log_user_references'),  # Ajusta esto a tu última migración
+        ('users', '0002_alter_user_managers'), 
     ]
 
     operations = [
