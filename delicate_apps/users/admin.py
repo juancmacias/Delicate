@@ -1,44 +1,64 @@
 from django.contrib import admin
-from django import forms
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User
 
-class UserAdminForm(forms.ModelForm):
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = '__all__'
-        help_texts = {
-            'username': 'Opcional. Se generará automáticamente a partir del email si se deja en blanco.',
-        }
+        fields = ('email', 'name', 'roll', 'company')
+        
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('email', 'name', 'roll', 'company', 'active')
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    form = UserAdminForm
+class UserAdmin(BaseUserAdmin):
+    form = CustomUserChangeForm
+    add_form = CustomUserCreationForm
+    
     # Mostrar campos en la lista del panel de administración
     list_display = ('id', 'name', 'email', 'username', 'roll', 'active')
+    
     # Habilitar una barra de búsqueda
     search_fields = ('name', 'email', 'username', 'roll')
+    
     # Añadir filtros laterales
     list_filter = ('active', 'roll')
+    
     # Ordenar los registros de forma predeterminada
     ordering = ('id',)
-    # Restringir ciertos campos a solo lectura
-    readonly_fields = ('id',)
-    # Organizar los campos en secciones dentro del formulario de edición
+    
+    # Campos para el formulario de creación
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'name', 'username', 'company', 'roll', 'password1', 'password2'),
+        }),
+    )
+    
+    # Campos para el formulario de edición
     fieldsets = (
         ('Información Personal', {
-            'fields': ('name', 'email', 'username', 'password', 'roll')
+            'fields': ('email', 'name', 'username', 'password', 'roll')
         }),
         ('Estado y Relaciones', {
             'fields': ('active', 'company', 'groups', 'user_permissions')
         }),
-        ('Información del Sistema', {
-            'fields': ('id',),
-            'classes': ('collapse',),
+        ('Permisos', {
+            'fields': ('is_active', 'is_staff', 'is_superuser'),
         }),
     )
-
+    
     def save_model(self, request, obj, form, change):
         """Personalizar cómo se guarda el modelo desde el admin"""
-        # El método create_user del UserManager se encargará de generar un username
-        # si no se ha proporcionado uno
+        # Si es un nuevo usuario o la contraseña ha cambiado
+        if not change or 'password' in form.changed_data:
+            # Guarda la contraseña en texto plano temporalmente
+            password = obj.password
+            # Establecer la contraseña correctamente hasheada
+            obj.set_password(password)
+        
+        # Guardar el modelo
         super().save_model(request, obj, form, change)
