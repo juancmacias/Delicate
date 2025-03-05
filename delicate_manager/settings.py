@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import sys
+import cloudinary.uploader
+import cloudinary.api
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -58,6 +60,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
+    # Cloudinary apps (añadidas aquí una sola vez)
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -95,32 +100,31 @@ WSGI_APPLICATION = 'delicate_manager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# Configuración de base de datos
-# Depende de la variable USE_LOCAL_DB en local_settings.py
-import environ
-env = environ.Env()
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+# Determinar si se usa la base de datos local o remota
+USE_LOCAL_DB = os.environ.get('USE_LOCAL_DB', 'False') == 'True'
 
-if USE_LOCAL_DB :
-    # Configuración para base de datos local SQLite3
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
+if USE_LOCAL_DB:
+    # Configuración de base de datos local
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': env("DB_NAME"),
-            'USER': env("DB_USER"),
-            'PASSWORD': env("DB_PASSWORD"),
-            'HOST': env("DB_HOST"),
-            'PORT': env("DB_PORT"),
+            'NAME': os.getenv("LOCAL_DB_NAME", "delicate_local"),
+            'USER': os.getenv("LOCAL_DB_USER", "postgres"),
+            'PASSWORD': os.getenv("LOCAL_DB_PASSWORD", "postgres"),
+            'HOST': os.getenv("LOCAL_DB_HOST", "localhost"),
+            'PORT': os.getenv("LOCAL_DB_PORT", "5432"),
+        }
+    }
+else:
+    # Configuración de base de datos remota (la actual)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASSWORD"),
+            'HOST': os.getenv("DB_HOST"),
+            'PORT': os.getenv("DB_PORT"),
         }
     }
 
@@ -212,4 +216,21 @@ AUTHENTICATION_BACKENDS = [
     'users.auth_backends.CustomBackend',
 ]    
 # Configuración de autenticación personalizada
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.User' 
+
+# Cloudinary Storage Configuration
+# Configuración de Cloudinary usando variables de entorno
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET')
+)
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET')
+}
+
+# Configura el storage por defecto
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

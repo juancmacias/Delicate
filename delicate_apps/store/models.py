@@ -2,6 +2,8 @@ from django.db import models
 from delicate_apps.company.models import Company
 from delicate_apps.type.models import Type
 from django.db.models import Sum
+from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 class StoreProduct(models.Model):
     id = models.AutoField(primary_key=True)
@@ -9,10 +11,31 @@ class StoreProduct(models.Model):
     category = models.CharField(max_length=50, verbose_name='Categoría')
     name = models.CharField(max_length=100, verbose_name='Nombre')
     description = models.CharField(max_length=250, verbose_name='Descripción')
-    amount = models.CharField(max_length=100, verbose_name='Cantidad')
-    stock_inicial = models.IntegerField(verbose_name='Stock inicial', default=0)
-    image = models.CharField(max_length=255, verbose_name='Imagen', blank=True, null=True)
+    category = models.CharField(max_length=50, verbose_name='Categoría')
+    
+    # Pricing and taxes
     net_price = models.FloatField(verbose_name='Precio neto')
+    iva = models.FloatField(verbose_name='IVA')
+    
+    # Stock management (keeping legacy fields but using stock as primary)
+    amount = models.CharField(max_length=100, verbose_name='Cantidad (obsoleto)')
+    stock_inicial = models.IntegerField(verbose_name='Stock inicial (obsoleto)', default=0)
+    stock = models.IntegerField(verbose_name='Stock disponible', default=0)
+    
+    # Media
+    image = CloudinaryField(
+        'image', 
+        blank=True, 
+        null=True, 
+        help_text='Imagen del producto',
+        transformation=[
+            {'width': 500, 'height': 500, 'crop': 'limit'},
+            {'quality': 'auto'},
+            {'fetch_format': 'auto'}
+        ]
+    )
+    
+    # Relations
     fk_company = models.ForeignKey(
         Company,
         on_delete=models.CASCADE,
