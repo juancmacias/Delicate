@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'delicate_manager.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # Configuración de base de datos
-if os.environ.get('USE_LOCAL_DB', 'False') == 'True':
+if os.environ.get('USE_LOCAL_DB') == 'True':
     # Configuración para base de datos local SQLite3
     DATABASES = {
         'default': {
