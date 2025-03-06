@@ -20,7 +20,10 @@ import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = BASE_DIR / ".env"
+dotenv_path = BASE_DIR / ".env"
 sys.path.append(os.path.join(BASE_DIR, 'delicate_apps'))
+if dotenv_path.exists():
+    load_dotenv(dotenv_path)
 if dotenv_path.exists():
     load_dotenv(dotenv_path)
 
@@ -118,12 +121,8 @@ elif USE_SQLITE:
     # Configuración SQLite3 (para desarrollo local)
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.getenv("LOCAL_DB_NAME", "delicate_local"),
-            'USER': os.getenv("LOCAL_DB_USER", "postgres"),
-            'PASSWORD': os.getenv("LOCAL_DB_PASSWORD", "postgres"),
-            'HOST': os.getenv("LOCAL_DB_HOST", "localhost"),
-            'PORT': os.getenv("LOCAL_DB_PORT", "5432"),
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
 else:
