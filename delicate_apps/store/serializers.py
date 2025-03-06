@@ -52,5 +52,5 @@ class StoreProductDetailSerializer(serializers.ModelSerializer):
     # Get the image URL
     def get_image_url(self, obj):
         if obj.image:
-            return obj.image.url
-        return None
+            return f"https://res.cloudinary.com/dpqopnap4/{obj.image}"
+    return None
