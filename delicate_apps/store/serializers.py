@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import StoreProduct
 from delicate_apps.type.serializers import TypeSerializer
 from delicate_apps.company.serializers import CompanySerializer
+from django.conf import settings
 
 class StoreProductSerializer(serializers.ModelSerializer):
     total_price = serializers.SerializerMethodField()
@@ -52,5 +53,5 @@ class StoreProductDetailSerializer(serializers.ModelSerializer):
     # Get the image URL
     def get_image_url(self, obj):
         if obj.image:
-            return f"https://res.cloudinary.com/dpqopnap4/{obj.image}"
-    return None
+            return f"{os.getenv('CLOUDINARY_URL_PREFIX')}{obj.image}"
+        return None

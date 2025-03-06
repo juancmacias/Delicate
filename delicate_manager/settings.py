@@ -227,3 +227,6 @@ CLOUDINARY_STORAGE = {
 
 # Configura el storage por defecto
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Configura el prefijo de URL para Cloudinary
+CLOUDINARY_URL_PREFIX = os.getenv('CLOUDINARY_URL_PREFIX')
