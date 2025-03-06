@@ -16,11 +16,13 @@ from dotenv import load_dotenv
 import sys
 import cloudinary.uploader
 import cloudinary.api
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+dotenv_path = BASE_DIR / ".env"
 sys.path.append(os.path.join(BASE_DIR, 'delicate_apps'))
+if dotenv_path.exists():
+    load_dotenv(dotenv_path)
 
 
 # Quick-start development settings - unsuitable for production
@@ -101,26 +103,25 @@ USE_SQLITE = os.environ.get('USE_SQLITE', 'False') == 'True'
 
 # Configuración de bases de datos
 if USE_LOCAL_DB:
-    if USE_SQLITE:
-        # Configuración SQLite3 (para desarrollo local)
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
+    # Configuración PostgreSQL local
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv("LOCAL_DB_NAME", "delicate_local"),
+            'USER': os.getenv("LOCAL_DB_USER", "postgres"),
+            'PASSWORD': os.getenv("LOCAL_DB_PASSWORD", "postgres"),
+            'HOST': os.getenv("LOCAL_DB_HOST", "localhost"),
+            'PORT': os.getenv("LOCAL_DB_PORT", "5432"),
         }
-    else:
-        # Configuración PostgreSQL local
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': os.getenv("LOCAL_DB_NAME", "delicate_local"),
-                'USER': os.getenv("LOCAL_DB_USER", "postgres"),
-                'PASSWORD': os.getenv("LOCAL_DB_PASSWORD", "postgres"),
-                'HOST': os.getenv("LOCAL_DB_HOST", "localhost"),
-                'PORT': os.getenv("LOCAL_DB_PORT", "5432"),
-            }
+    }
+elif USE_SQLITE:
+    # Configuración SQLite3 (para desarrollo local)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
+    }
 else:
     # Configuración PostgreSQL remota
     DATABASES = {

@@ -3,6 +3,8 @@ name = "py-crud-02-delicate"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
+    "cloudinary>=1.42.2",
+    "django-cloudinary-storage>=0.3.0",
     "django-environ>=0.12.0",
     "djangorestframework-simplejwt>=5.5.0",
 ]
