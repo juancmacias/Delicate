@@ -17,7 +17,10 @@ class UserManager(BaseUserManager):
                 username = f"{base_username}{count}"
                 count += 1
             extra_fields['username'] = username
-        
+        # Check that clients don't have access to the Django admin.
+        # Primera barrera de seguridad para evitar acceso de clientes al admin.
+        if extra_fields.get('roll') == 'customer':
+            extra_fields.setdefault('is_staff', False)
         user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)        
         user.save(using=self._db)
@@ -39,6 +42,7 @@ class User(AbstractUser):
         ('admin', 'Admin'),
         ('manager', 'Manager'),
         ('employee', 'Employee'),
+        ('customer', 'Customer'),
     ]
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='users')
     email = models.EmailField(max_length=255, unique=True)
@@ -78,7 +82,12 @@ class User(AbstractUser):
             return perm in ['view_user', 'change_user', 'add_user']
         elif self.roll == 'employee':
             return perm in ['view_user']
+        elif self.roll == 'customer':
+            return False
         return False
 
     def has_module_perms(self, app_label):
-        return True
+        # Solo los usuarios con is_staff=True pueden acceder al admin
+        if self.is_staff:
+            return True
+        return False

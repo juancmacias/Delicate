@@ -1,2 +1,3 @@
 # local_settings.py
-USE_LOCAL_DB = False
+USE_LOCAL_DB = True
+DEBUG = True

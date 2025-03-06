@@ -2,7 +2,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User
+from django.contrib import admin
+from users.forms import CustomLoginForm
 
+# Sobrescribe el formulario de autenticación del admin
+admin.site.login_form = CustomLoginForm
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
@@ -17,19 +21,20 @@ class CustomUserChangeForm(UserChangeForm):
 class UserAdmin(BaseUserAdmin):
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
-    
     # Mostrar campos en la lista del panel de administración
     list_display = ('id', 'name', 'email', 'username', 'roll', 'active')
-    
     # Habilitar una barra de búsqueda
     search_fields = ('name', 'email', 'username', 'roll')
-    
     # Añadir filtros laterales
     list_filter = ('active', 'roll')
-    
     # Ordenar los registros de forma predeterminada
     ordering = ('id',)
-    
+    # Segunda barrera de seguridad para evitar acceso de clientes al admin.
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.exclude(roll='customer')  # Excluir clientes del admin
     # Campos para el formulario de creación
     add_fieldsets = (
         (None, {

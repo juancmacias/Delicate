@@ -97,6 +97,8 @@ WSGI_APPLICATION = 'delicate_manager.wsgi.application'
 
 # Configuración de base de datos
 # Depende de la variable USE_LOCAL_DB en local_settings.py
+import environ
+env = environ.Env()
 try:
     from .local_settings import *
 except ImportError:

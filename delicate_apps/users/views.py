@@ -5,6 +5,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import User
 from .serializers import UserSerializer, CustomTokenObtainPairSerializer
 from .permissions import IsAdmin, IsManager, IsEmployee, IsAdminOrManager, IsAdminOrReadOnly
+from django.contrib.auth.views import LoginView
+from .forms import CustomLoginForm
+
+class CustomAdminLoginView(LoginView):
+    form_class = CustomLoginForm
+    template_name = "admin/login.html"  
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
