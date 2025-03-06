@@ -20,7 +20,6 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(BASE_DIR, 'delicate_apps'))
 
 
@@ -28,7 +27,7 @@ sys.path.append(os.path.join(BASE_DIR, 'delicate_apps'))
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t1#2dnyy1$o#h38=euicqba8%wfi!-=c7joo7+sbs-^yf_l+x7'
+SECRET_KEY = os.getenv('SECURITY_KEY', 'django-insecure-t1#2dnyy1$o#h38=euicqba8%wfi!-=c7joo7+sbs-^yf_l+x7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
@@ -39,7 +38,7 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 # Application definition
 
 INSTALLED_APPS = [
-    # Comentamos temporalmente las apps hasta que estén configuradas
+    # Aplicaciones propias
     'delicate_apps.users',
     'delicate_apps.company',
     'delicate_apps.store',
@@ -52,14 +51,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'delicate_apps.company.apps.CompanyConfig',
-    #'delicate_apps.users.apps.UsersConfig',
     # Apps terceros
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
-    # Cloudinary apps (añadidas aquí una sola vez)
+    # Cloudinary apps
     'cloudinary_storage',
     'cloudinary',
 ]
@@ -96,26 +93,35 @@ TEMPLATES = [
 WSGI_APPLICATION = 'delicate_manager.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# Database configuration
 # Determinar si se usa la base de datos local o remota
 USE_LOCAL_DB = os.environ.get('USE_LOCAL_DB', 'False') == 'True'
+USE_SQLITE = os.environ.get('USE_SQLITE', 'False') == 'True'
 
+# Configuración de bases de datos
 if USE_LOCAL_DB:
-    # Configuración de base de datos local
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.getenv("LOCAL_DB_NAME", "delicate_local"),
-            'USER': os.getenv("LOCAL_DB_USER", "postgres"),
-            'PASSWORD': os.getenv("LOCAL_DB_PASSWORD", "postgres"),
-            'HOST': os.getenv("LOCAL_DB_HOST", "localhost"),
-            'PORT': os.getenv("LOCAL_DB_PORT", "5432"),
+    if USE_SQLITE:
+        # Configuración SQLite3 (para desarrollo local)
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
         }
-    }
+    else:
+        # Configuración PostgreSQL local
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                'NAME': os.getenv("LOCAL_DB_NAME", "delicate_local"),
+                'USER': os.getenv("LOCAL_DB_USER", "postgres"),
+                'PASSWORD': os.getenv("LOCAL_DB_PASSWORD", "postgres"),
+                'HOST': os.getenv("LOCAL_DB_HOST", "localhost"),
+                'PORT': os.getenv("LOCAL_DB_PORT", "5432"),
+            }
+        }
 else:
-    # Configuración de base de datos remota (la actual)
+    # Configuración PostgreSQL remota
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -182,10 +188,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT AUTHENTICATION CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': (  # Corrigiendo nombre del parámetro
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-        'DEFAULT_PERMISSION_CLASSES': (
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
@@ -206,7 +212,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
-    }
+}
 
 # Configuración de autenticación personalizada
 AUTH_USER_MODEL = 'users.User' 
