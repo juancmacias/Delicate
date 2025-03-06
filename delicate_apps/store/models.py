@@ -73,6 +73,7 @@ class StoreProduct(models.Model):
 
     def get_unidades_vendidas(self):
         """Calcula el total de unidades vendidas"""
+        """Calcula el total de unidades vendidas"""
         from delicate_apps.invoices.models import InvoiceItem
         vendidas = InvoiceItem.objects.filter(product=self).aggregate(
             total=Sum('quantity'))['total'] or 0
