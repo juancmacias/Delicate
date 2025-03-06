@@ -96,15 +96,13 @@ WSGI_APPLICATION = 'delicate_manager.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # Configuración de base de datos
+# Depende de la variable USE_LOCAL_DB en local_settings.py
+try:
+    from .local_settings import *
+except ImportError:
+    pass
 
-import environ
-
-# Inicializa el entorno
-env = environ.Env()
-environ.Env.read_env()
-
-# Configuración de base de datos
-if env('USE_LOCAL_DB') == 'True':
+if USE_LOCAL_DB :
     # Configuración para base de datos local SQLite3
     DATABASES = {
         'default': {
