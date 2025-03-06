@@ -36,6 +36,7 @@ class UserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self.create_user(email, password, **extra_fields)
+        return self.create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
     ROLE_CHOICES = [
