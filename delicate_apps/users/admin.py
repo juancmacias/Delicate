@@ -58,17 +58,6 @@ class UserAdmin(BaseUserAdmin):
     
     def save_model(self, request, obj, form, change):
         """Personalizar cómo se guarda el modelo desde el admin"""
-<<<<<<< HEAD
-        # Si es un nuevo usuario o la contraseña ha cambiado
-        if not change or 'password' in form.changed_data:
-            # Guarda la contraseña en texto plano temporalmente
-            password = obj.password
-            # Establecer la contraseña correctamente hasheada
-            obj.set_password(password)
-        
-        # Guardar el modelo
-        super().save_model(request, obj, form, change)
-=======
         if not change:  # Si es un nuevo usuario
             # Guardar la contraseña original
             password = obj.password
@@ -81,4 +70,3 @@ class UserAdmin(BaseUserAdmin):
             if form.cleaned_data.get('password') != form.initial.get('password'):
                 obj.set_password(form.cleaned_data.get('password'))
             obj.save()
->>>>>>> 2060822 (Fix password hashing in admin user creation)
