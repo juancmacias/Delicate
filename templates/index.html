@@ -14,15 +14,15 @@
         <div id="lista-Productos" class="product-grid">
           <!-- listado de productos-->
           {% for producto in all_products %}
-          {% set iva = producto["neto_price"] * (producto["iva"] / 100) %}
-          {% set precio_total = producto["neto_precio"] + iva %}
+          {% set iva = producto.net_price * (producto["iva"] / 100) %}
+          {% set precio_total = producto["net_price"] + iva %}
 
           <div class="card">
             <a href="/details/{{ producto['id'] }}"
               target="_top"
               title="{{ producto['name'] }}"
             >
-              <img src="{{ producto['image'] }}" alt="{{ producto['name'] }}" />
+              <img src="https://res.cloudinary.com/dpqopnap4/{{ producto['image'] }}" alt="{{ producto['name'] }}" />
             </a>
             <div class="precio_producto">
               <p class="name">{{ producto['name'] }}</p>
@@ -34,16 +34,7 @@
           </div>
           {% endfor %}
           <!-- fin listado de productos-->
-          <div class="product">
-            <img src="product1.jpg" alt="Queso Brie" width="100%" />
-            <p>Queso Brie - 00.00€</p>
-            <button class="raleway-thin">Comprar</button>
-          </div>
-          <div class="product">
-            <img src="product1.jpg" alt="Queso Brie" width="100%" />
-            <p>Queso Brie - 00.00€</p>
-            <button class="raleway-thin">Comprar</button>
-          </div>
+
         </div>
       </section>
       {% include "include/about.html" %} {% include "include/footer.html" %}

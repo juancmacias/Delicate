@@ -22,16 +22,17 @@
         <div class="register-section">
           <h1>REGISTRARSE</h1>
           <p>Regístrate para poder comprar nuestros productos</p>
-          <form>
+          {{ error }}
+          <form action="/register" method="post" autocomplete="off">
             <div class="input-group">
-              <input type="text" placeholder="Nombre" />
-              <input type="text" placeholder="Apellido" />
+              <input name="username" type="text" placeholder="Nombre" />
+              <input name="last_name" type="text" placeholder="Apellido" />
             </div>
             <div class="input-group">
-              <input type="email" placeholder="Email" />
+              <input name="email" id="email" type="email" placeholder="Email" />
               <input type="email" placeholder="Confirma tu email" />
             </div>
-            <input type="password" placeholder="Contraseña" />
+            <input name="password" type="password" placeholder="Contraseña" />
             <input type="password" placeholder="Confirma la contraseña" />
             <div class="checkbox-container">
               <input type="checkbox" id="terms" />

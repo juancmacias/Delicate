@@ -48,7 +48,6 @@ class Company_Company(Base):
     direction = Column(String)
     cif = Column(String)
 
-
 # cesta
 class Store_Cart(Base):
     __tablename__ = "basket_temp_items"
@@ -58,4 +57,4 @@ class Store_Cart(Base):
     cantidad = Column(Integer)
     precio = Column(Float)
     temp_date = Column(TIMESTAMP)
-    status = Column(String)
+    status = Column(Boolean, default=True)

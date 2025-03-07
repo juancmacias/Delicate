@@ -79,8 +79,10 @@ function leerDatosProducto (producto) {
         imagen: producto.querySelector("img").src,
         titulo: producto.querySelector(".name").textContent,
         precio: producto.querySelector(".precio span").textContent,
-        id: producto.querySelector("button").getAttribute("data-id"),
+        producto_id: producto.querySelector("button").getAttribute("data-id"),
         cantidad: 1,
+        temp_date: new Date(),
+        status: false
     }
     // Revisa si un elemento ya existe en el carrito
     const existe = articulosCarrito.some(producto => producto.id === infoProducto.id);
@@ -157,57 +159,57 @@ function limpiarHTML () {
     }
 }
 
-/* gestion del token login */
-async function checkAuth() {
-    let token = localStorage.getItem("token");
-    if (!token) {
-        
-        setTimeout(() => window.location.href = "/", 2000);
-        return;
-    }
-
-    let response = await fetch("/v1/protected", {
-        headers: { "Authorization": "Bearer " + token }
-    });
-
-    let result = await response.json();
-    
-    if (response.ok) {
-
-        //document.getElementById("message").innerText = result.message;
-    } else {
-        //document.getElementById("message").innerText = "Token inválido. Redirigiendo...";
-        localStorage.removeItem("token");
-        setTimeout(() => window.location.href = "/", 2000);
-    }
-}
-
-
 
 document.querySelector(".menu-btn").addEventListener("mouseover", function() {
     document.getElementById("menuContent").classList.toggle("show");
 });
-function updateMenu() {
+async function updateMenu() {
     let token = localStorage.getItem("token");
-    if (token) {
+    let response = await fetch("/v1/protected", {
+        headers: { "Authorization": "Bearer " + token }
+    });
+    const userImage = document.getElementById("userImage");
+    if (response.ok) {
         document.getElementById("loginLink").style.display = "none";
         document.getElementById("logoutLink").style.display = "block";
+        userImage.src = "/v1/static/img/exit.png";
         //document.getElementById("welcomeMessage").innerText = "Bienvenido, usuario autenticado.";
     } else {
         document.getElementById("loginLink").style.display = "block";
         document.getElementById("logoutLink").style.display = "none";
+        userImage.src = "/v1/static/img/user.png";
         //document.getElementById("welcomeMessage").innerText = "Por favor, inicia sesión.";
     }
 }
 document.getElementById("logoutLink").addEventListener("click", function() {
     localStorage.removeItem("token");
-    //updateMenu();
-    setTimeout(() => window.location.href = "/", 2000);
-    alert("Has cerrado sesión.");
+    setTimeout(() => window.location.href = "/logout", 1000);
+    
 });
 
 document.getElementById("loginLink").addEventListener("click", function() {
-    window.location.href = "index.html";  // Redirige a la página de login
+
+    window.location.href = "/login";  
 });
 updateMenu();
-//checkAuth();
+
+async function enviarDatos() {
+    if (document.getElementById("logoutLink").style.display != "block") {
+        window.location.href = "/register"
+    }else{
+        const token = localStorage.getItem("token"); 
+        const carts =  localStorage.getItem("carrito"); 
+
+        console.log(carts);
+        await fetch("/buy", {
+            method: "post",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ "carts": carts })
+        });
+        //setTimeout(() => window.location.href = "/buy", 1000);
+    }
+    
+}
+document.getElementById("buy").addEventListener("click", function() {
+    enviarDatos(); 
+});

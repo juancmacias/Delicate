@@ -23,22 +23,53 @@
         <!-- Formulario de edición -->
         <section class="profile-form">
           <h2 class="cinzel-thin">Modifica tu información</h2>
-          <form>
-            <input name="name" type="text" placeholder="Nombre" value="{{ nombre }}" />
-            <input name="first_name" type="text" placeholder="Apellido" value="{{ apellido }}" />
-            <input name="email" type="email" placeholder="Email" value="{{ email }}" />
-            <input name="re_email" type="email" placeholder="Confirma tu email"  />
+          <form action="/users" method="post">
+            <input
+              name="username"
+              type="text"
+              placeholder="Nombre"
+              value="{{ user.username }}"
+            />
+            <input
+              name="first_name"
+              type="text"
+              placeholder="Apellido"
+              value="{{ user.last_name }}"
+            />
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              value="{{ user.email }}"
+              required
+            />
+            <input
+              name="re_email"
+              type="email"
+              placeholder="Confirma tu email"
+              value=""
+              required
+            />
             <div class="password-container">
-              <input type="password" id="password" placeholder="Contraseña" value="{{ password }}" />
+              <input
+                name="password"
+                type="password"
+                id="password"
+                placeholder="Contraseña"
+                value=""
+                required
+              />
               <span class="toggle-password" onclick="togglePassword('password')"
                 >👁️</span
               >
             </div>
             <div class="password-container">
               <input
+                name="confirm_password"
                 type="password"
                 id="confirm-password"
                 placeholder="Confirma la contraseña"
+                required
               />
               <span
                 class="toggle-password"
@@ -61,15 +92,17 @@
                 <th>Nº Artículos</th>
               </tr>
             </thead>
-            
+
             <tbody>
               <!-- listar los pedidos-->
+              {% for cart in cart_store %}
               <tr>
                 <td>1</td>
-                <td>10/01/2025</td>
-                <td>170€</td>
-                <td>7</td>
+                <td>{{ cart['temp_date'] }}</td>
+                <td>{{ cart['precio'] }}</td>
+                <td>{{ cart['cantidad'] }}</td>
               </tr>
+              {% endfor %}
               <!-- fin lista de pedidos-->
             </tbody>
           </table>
@@ -87,8 +120,6 @@
           input.type = "password";
         }
       }
-
-
-      </script>
+    </script>
   </body>
 </html>

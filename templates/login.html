@@ -69,6 +69,7 @@
               localStorage.setItem("token", result.access_token);
               //document.getElementById("response").innerText = "¡Login exitoso!";
               checkProtectedRoute();
+              console.log(result);
               window.location.href = '/users';
           } else {
               document.getElementById("response").innerText = "Error: " + result.detail;

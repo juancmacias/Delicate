@@ -13,12 +13,13 @@
       <a href="/products">Productos</a>
       <a href="/about">Sobre Nosotros</a>
       <a href="/contact">Contacto</a>
-      <div class="menu"><img class="menu-btn" src="{{ url_for('static', path='img/user.png') }}" alt="" />
+      <div class="menu">
+        <img class="menu-btn" id="userImage" src="{{ url_for('static', path='img/user.png') }}" alt="" />
         <div class="menu-content" id="menuContent">
           <a href="#" id="loginLink">Iniciar sesión</a>
           <a href="#" id="logoutLink" style="display:none;">Cerrar sesión</a>
         </div>
-      </a>
+      </div>
       <a href="#"><img src="{{ url_for('static', path='img/search.png') }}" alt="" /></a>
       <div class="submenu">
         
@@ -42,7 +43,7 @@
                 <div id="total">
                   <p id="suma">Total: 0€</p>
                   <a href="#" id="vaciar-carrito" class="button u-full-width">Vaciar Carrito</a>
-                  <a href="#"  class="button u-full-width">Terminar compra</a>
+                  <a href="#"  id="buy" class="button u-full-width">Terminar compra</a>
                 </div>
             </div>
         </div>
@@ -51,7 +52,7 @@
   <section class="hero">
     <h1 class="cinzel-thin">El Lujo De Lo Auténtico, El Placer De Lo Gourmet</h1>
     <div class="buttons">
-      <a href="/registre"><button class="btn">Registrarse</button></a>
+      <a href="/register"><button class="btn">Registrarse</button></a>
       
       <a href="/login"><button class="btn">Login</button></a>
       
