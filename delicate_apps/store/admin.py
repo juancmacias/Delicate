@@ -1,9 +1,71 @@
 from django.contrib import admin
-from .models import StoreProduct
+from django.utils.html import format_html
+from .models import StoreProduct, StockMovement
+from django import forms
+
+class StockMovementInline(admin.TabularInline):
+    model = StockMovement
+    extra = 0
+    readonly_fields = ('movement_type', 'quantity', 'previous_stock', 'new_stock', 'user', 'created_at')
+    fields = ('movement_type', 'quantity', 'previous_stock', 'new_stock', 'user', 'notes', 'created_at')
+    can_delete = False
+    max_num = 0
+    verbose_name = "Movimiento de stock"
+    verbose_name_plural = "Historial de movimientos"
+    
+    def has_add_permission(self, request, obj=None):
+        return False
+
+class StockManagementForm(forms.ModelForm):
+    """Form for more intuitive stock management"""
+    add_stock = forms.IntegerField(
+        label="Añadir unidades", 
+        required=False, 
+        min_value=0,
+        help_text="Número de unidades a añadir al stock actual"
+    )
+    
+    remove_stock = forms.IntegerField(
+        label="Retirar unidades", 
+        required=False, 
+        min_value=0,
+        help_text="Número de unidades a retirar del stock actual"
+    )
+    
+    stock_notes = forms.CharField(
+        label="Notas", 
+        required=False, 
+        widget=forms.Textarea(attrs={'rows': 2}),
+        help_text="Motivo del cambio de stock (opcional)"
+    )
+    
+    class Meta:
+        model = StoreProduct
+        fields = '__all__'
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        add = cleaned_data.get('add_stock') or 0
+        remove = cleaned_data.get('remove_stock') or 0
+        current_stock = self.instance.stock if self.instance.pk else 0
+        
+        if add > 0 and remove > 0:
+            raise forms.ValidationError(
+                "No puedes añadir y retirar stock simultáneamente, utiliza solo uno de los campos."
+            )
+        
+        if remove > current_stock:
+            raise forms.ValidationError(
+                f"No puedes retirar {remove} unidades. El stock actual es de {current_stock} unidades."
+            )
+        
+        return cleaned_data
 
 @admin.register(StoreProduct)
 class StoreProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'category', 'net_price', 'get_stock_display', 'iva', 'fk_company', 'fk_type')
+    form = StockManagementForm
+    list_display = ('id', 'name', 'category', 'get_price_display', 'get_price_with_iva_display', 
+                   'stock', 'get_stock_status', 'fk_company')
     list_filter = ('category', 'fk_company', 'fk_type')
     search_fields = ('name', 'category', 'description')
     readonly_fields = ('stock', 'stock_inicial', 'amount', 'image_preview')
@@ -71,13 +133,14 @@ class StoreProductAdmin(admin.ModelAdmin):
     
     fieldsets = (
         ('Información básica', {
-            'fields': ('name', 'category', 'description')
+            'fields': ('name', 'description', 'category')
         }),
         ('Precios e Impuestos', {
             'fields': ('net_price', 'iva')
         }),
-        ('Stock', {
-            'fields': ('stock_inicial', 'get_stock_info')
+        ('Gestión de Stock', {
+            'fields': ('stock', 'add_stock', 'remove_stock', 'stock_notes'),
+            'description': 'El stock actual se actualiza automáticamente cuando se realizan ventas o ajustes manuales.'
         }),
         ('Imagen', {
             'fields': ('image', 'image_preview'),
