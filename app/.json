@@ -1,0 +1,5 @@
+{
+    "to_email": "marie.adim@gmail.com",
+    "subject": "Test Email",
+    "body": "This is a test email sent from FastAPI"
+}

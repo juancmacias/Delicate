@@ -1,4 +1,4 @@
-import smtplib 
+""" import smtplib 
 
 smtpServer = 'smtp.gmail.com'
 fromadr = 'devprueba282@gmail.com'
@@ -10,3 +10,4 @@ server.starttls()
 server.login(fromadr, 'fnwt fftq pqpq alkh')
 server.sendmail(fromadr, toadr, text)
 server.quit()
+ """
