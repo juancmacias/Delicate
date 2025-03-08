@@ -181,13 +181,18 @@ def checkout(request):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
+            # Validate payment method (only tarjeta or paypal)
+            payment_form = request.data.get('payment_form', 'tarjeta')
+            if payment_form not in ['tarjeta', 'paypal']:
+                payment_form = 'tarjeta'
+
             # Total calculation
             total = sum(item.get_total() for item in basket_items)
 
             # Create invoice
             invoice = Invoice.objects.create(
                 date=timezone.now().date(),
-                payment_form=request.data.get('payment_form', 'Efectivo'),
+                payment_form=request.data.get('payment_form', 'tarjeta'),
                 neto=total,
                 fk_user_id=user_id,
                 fk_company_id=request.data.get('company_id'),
