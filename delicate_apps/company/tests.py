@@ -3,10 +3,6 @@ from .models import Company
 from .serializers import CompanySerializer
 
 class CompanySimpleTests(SimpleTestCase):
-    """
-    Simple tests for Company model and serializer that don't require database
-    """
-    
     @classmethod
     def setUpClass(cls):
         """Set up before all tests"""

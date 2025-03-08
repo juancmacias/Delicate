@@ -4,10 +4,6 @@ from .serializers import TypeSerializer
 import sys
 
 class TypeSimpleTests(SimpleTestCase):
-    """
-    Simple tests for Type model and serializer that don't require database
-    """
-    
     @classmethod
     def setUpClass(cls):
         """Set up before all tests"""
