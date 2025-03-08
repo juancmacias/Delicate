@@ -4,10 +4,6 @@ from .models import User
 from delicate_apps.company.models import Company
 
 class UserSimpleTests(SimpleTestCase):
-    """
-    Tests for User model that avoid any database access
-    """
-    
     @classmethod
     def setUpClass(cls):
         """Set up before all tests"""
