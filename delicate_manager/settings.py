@@ -243,3 +243,9 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Configura el prefijo de URL para Cloudinary
 CLOUDINARY_URL_PREFIX = os.getenv('CLOUDINARY_URL_PREFIX')
+
+# Test runner configuration
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+TEST_RUNNER_ARGS = {
+    'verbosity': 2,
+}
