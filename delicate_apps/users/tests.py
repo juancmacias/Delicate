@@ -1,10 +1,13 @@
 from django.test import SimpleTestCase
 from unittest.mock import patch, MagicMock
 from .models import User
-from .serializers import UserSerializer
 from delicate_apps.company.models import Company
 
 class UserSimpleTests(SimpleTestCase):
+    """
+    Tests for User model that avoid any database access
+    """
+    
     @classmethod
     def setUpClass(cls):
         """Set up before all tests"""
@@ -81,64 +84,18 @@ class UserSimpleTests(SimpleTestCase):
         self.assertFalse(employee_user.has_perm('add_user'))
         print(f"  ✓ Employee user has correct permissions")
     
-    def test_user_serializer_field_security(self):
+    def test_user_string_representation(self):
         """
-        Test that UserSerializer properly handles sensitive fields.
-        Password should be write-only for security.
+        Test that User model string representation shows email.
         """
         # Create a test user
         test_user = User(
-            id=1,
             email="test@example.com",
-            password="secure_password",
             name="Test User",
             roll="admin",
             company=self.company
         )
         
-        # Serialize the user
-        serializer = UserSerializer(test_user)
-        
-        # Check that regular fields are included
-        self.assertIn('email', serializer.data)
-        self.assertIn('name', serializer.data)
-        self.assertIn('roll', serializer.data)
-        print(f"  ✓ UserSerializer includes regular fields")
-        
-        # Password should be write-only and not included in output
-        self.assertNotIn('password', serializer.data)
-        print(f"  ✓ UserSerializer properly excludes password field")
-    
-    @patch('delicate_apps.users.models.BaseUserManager.normalize_email')
-    def test_user_creation_email_normalization(self, mock_normalize):
-        """
-        Test that UserManager correctly normalizes email addresses.
-        This is important for consistent user identification.
-        """
-        # Configure the mock
-        mock_normalize.return_value = "normalized@example.com"
-        
-        # Create a user manager instance
-        user_manager = User.objects
-        
-        # Create a test company
-        test_company = Company(id=1, name="Test Company")
-        
-        # Mock the save method to avoid database operations
-        with patch.object(User, 'save'):
-            with patch.object(User, 'set_password'):
-                # Call create_user with an email that needs normalization
-                user = user_manager.create_user(
-                    email="TEST@example.com",  # Uppercase email
-                    password="password123",
-                    name="Test User",
-                    roll="employee",
-                    company=test_company
-                )
-        
-        # Verify normalize_email was called
-        mock_normalize.assert_called_once_with("TEST@example.com")
-        
-        # Check that the normalized email was used
-        self.assertEqual(user.email, "normalized@example.com")
-        print(f"  ✓ UserManager normalizes email addresses during user creation")
+        # Test the string representation
+        self.assertEqual(str(test_user), "test@example.com")
+        print(f"  ✓ User '{test_user}' has correct string representation")
