@@ -20,10 +20,7 @@ import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = BASE_DIR / ".env"
-dotenv_path = BASE_DIR / ".env"
 sys.path.append(os.path.join(BASE_DIR, 'delicate_apps'))
-if dotenv_path.exists():
-    load_dotenv(dotenv_path)
 if dotenv_path.exists():
     load_dotenv(dotenv_path)
 
@@ -62,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
+    'drf_yasg',
     # Cloudinary apps
     'cloudinary_storage',
     'cloudinary',
