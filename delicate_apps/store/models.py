@@ -1,3 +1,7 @@
+"""
+Store product models for product management and stock tracking.
+"""
+
 from django.db import models
 from django.conf import settings
 from delicate_apps.company.models import Company
@@ -7,6 +11,10 @@ from django.utils import timezone
 from cloudinary.models import CloudinaryField
 
 class StoreProduct(models.Model):
+    """
+    Store product model representing items available for purchase.
+    Manages product information, pricing, and stock tracking.
+    """
     id = models.AutoField(primary_key=True)
     category = models.CharField(max_length=50, verbose_name='Categoría')
     name = models.CharField(max_length=100, verbose_name='Nombre')
@@ -59,33 +67,37 @@ class StoreProduct(models.Model):
         return self.name
 
     def get_formatted_price(self):
-        """Formatted net price display"""
+        """Return formatted net price with currency symbol."""
         return f"{self.net_price:.2f} €"
 
     def get_formatted_total_price(self):
-        """Formatted price with IVA"""
+        """Return formatted price with IVA and currency symbol."""
         total_price = self.get_total_price()
         return f"{total_price:.2f} €"
 
     def get_total_price(self):
-        """Calculate total price with IVA"""
+        """Calculate total price including IVA."""
         return self.net_price * (1 + (self.iva / 100))
 
     def get_unidades_vendidas(self):
-        """Calcula el total de unidades vendidas"""
+        """Calculate total units sold for this product."""
         from delicate_apps.invoices.models import InvoiceItem
         vendidas = InvoiceItem.objects.filter(product=self).aggregate(
             total=Sum('quantity'))['total'] or 0
         return vendidas
 
     def add_stock(self, cantidad, user=None, notes=""):
-        """Añade unidades al stock"""
+        """
+        Add units to available stock and record the movement.
+        
+        Returns True if stock was successfully added.
+        """
         if cantidad > 0:
             previous_stock = self.stock
             self.stock += cantidad
             self.save()
             
-            # Crear movimiento de stock
+            # Create stock movement record
             StockMovement.objects.create(
                 product=self,
                 movement_type='add',
@@ -99,13 +111,17 @@ class StoreProduct(models.Model):
         return False
 
     def remove_stock(self, cantidad, user=None, notes=""):
-        """Resta unidades del stock"""
+        """
+        Remove units from available stock and record the movement.
+        
+        Returns True if stock was successfully removed.
+        """
         if cantidad > 0 and self.stock >= cantidad:
             previous_stock = self.stock
             self.stock -= cantidad
             self.save()
             
-            # Crear movimiento de stock
+            # Create stock movement record
             StockMovement.objects.create(
                 product=self,
                 movement_type='remove',
@@ -119,6 +135,10 @@ class StoreProduct(models.Model):
         return False
 
 class StockMovement(models.Model):
+    """
+    Stock movement record for inventory tracking.
+    Records all changes to product stock with user and timestamp.
+    """
     MOVEMENT_TYPES = [
         ('initial', 'Stock inicial'),
         ('add', 'Añadir stock'),

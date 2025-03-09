@@ -1,3 +1,7 @@
+"""
+API views for shopping cart functionality.
+"""
+
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
@@ -10,10 +14,10 @@ from delicate_apps.invoices.models import Invoice, InvoiceItem
 from delicate_apps.store.models import StoreProduct
 from .serializers import BasketTempSerializer, BasketTempDetailSerializer, BasketTempHistorySerializer
 
-# Obtain all items from the basket
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_all_basket_items(request):
+    """Get all pending items in user's basket."""
     # Filter by user if provided
     user_id = request.query_params.get('user_id')
     # Only return items with status=False (not purchased)
@@ -25,10 +29,10 @@ def get_all_basket_items(request):
     serializer = BasketTempSerializer(items, many=True)
     return Response(serializer.data)
 
-# Obtain a specific item from the basket by ID
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_basket_item_by_id(request, id):
+    """Get specific basket item by ID."""
     try:
         item = get_object_or_404(BasketTemp, pk=id)
         serializer = BasketTempDetailSerializer(item)
@@ -39,10 +43,10 @@ def get_basket_item_by_id(request, id):
             status=status.HTTP_404_NOT_FOUND
         )
 
-# Add a new item to the basket
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_to_basket(request):
+    """Add product to basket or increase quantity if already exists."""
     with transaction.atomic():
         try:
             # Obtain and validate data
@@ -93,10 +97,10 @@ def add_to_basket(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
                 
-# Get purchase history for a user
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_basket_history(request):
+    """Get purchase history for a user."""
     try:
         user_id = request.query_params.get('user_id')
         if not user_id:
@@ -115,13 +119,14 @@ def get_basket_history(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-# Update an item in the basket
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_basket_item(request, id):
+    """Update quantity or other attributes of a basket item."""
     with transaction.atomic():
         try:
-            item = get_object_or_404(BasketTemp, pk=id, status=False)  # Only update non-purchased items
+            # Only update non-purchased items
+            item = get_object_or_404(BasketTemp, pk=id, status=False)
 
             # Validate new quantity if provided
             new_quantity = request.data.get('cantidad')
@@ -148,12 +153,13 @@ def update_basket_item(request, id):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-# Delete an item from the basket
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_basket_item(request, id):
+    """Remove an item from the basket."""
     try:
-        item = get_object_or_404(BasketTemp, pk=id, status=False)  # Only delete non-purchased items
+        # Only delete non-purchased items
+        item = get_object_or_404(BasketTemp, pk=id, status=False) 
         item.delete()
         return Response(
             {"message": "Item eliminado correctamente"},
@@ -165,15 +171,18 @@ def delete_basket_item(request, id):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-# Process the checkout of the basket
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def checkout(request):
+    """
+    Process checkout of basket items.
+    Creates invoice, updates product stock, and marks items as purchased.
+    """
     with transaction.atomic():
         try:
             user_id = request.data.get('user_id')
             
-            # Verify items in the basket (only non-purchased items)
+            # Verify items in the basket
             basket_items = BasketTemp.objects.filter(user_id=user_id, status=False)
             if not basket_items.exists():
                 return Response(
@@ -181,12 +190,12 @@ def checkout(request):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            # Validate payment method (only tarjeta or paypal)
+            # Validate payment method
             payment_form = request.data.get('payment_form', 'tarjeta')
             if payment_form not in ['tarjeta', 'paypal']:
                 payment_form = 'tarjeta'
 
-            # Total calculation
+            # Calculate total
             total = sum(item.get_total() for item in basket_items)
 
             # Create invoice
@@ -199,8 +208,9 @@ def checkout(request):
                 fk_type_id=request.data.get('type_id')
             )
 
-            # Create invoice items and update stock
+            # Process each basket item
             for item in basket_items:
+                # Create invoice item
                 InvoiceItem.objects.create(
                     invoice=invoice,
                     product=item.product_id,
@@ -213,7 +223,7 @@ def checkout(request):
                 product.stock -= item.cantidad
                 product.save()
                 
-                # Mark item as purchased instead of deleting
+                # Mark item as purchased
                 item.status = True
                 item.save()
 

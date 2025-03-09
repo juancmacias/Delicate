@@ -1,9 +1,17 @@
+"""
+Admin configuration for store products and stock management.
+"""
+
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import StoreProduct, StockMovement
 from django import forms
 
 class StockMovementInline(admin.TabularInline):
+    """
+    Inline admin for viewing stock movement history.
+    Shows stock changes directly within the product admin view.
+    """
     model = StockMovement
     extra = 0
     readonly_fields = ('movement_type', 'quantity', 'previous_stock', 'new_stock', 'user', 'created_at')
@@ -14,10 +22,14 @@ class StockMovementInline(admin.TabularInline):
     verbose_name_plural = "Historial de movimientos"
     
     def has_add_permission(self, request, obj=None):
+        """Prevent adding stock movements directly."""
         return False
 
 class StockManagementForm(forms.ModelForm):
-    """Form for more intuitive stock management"""
+    """
+    Enhanced form for intuitive stock management.
+    Provides add/remove stock fields instead of direct stock editing.
+    """
     add_stock = forms.IntegerField(
         label="Añadir unidades", 
         required=False, 
@@ -44,16 +56,19 @@ class StockManagementForm(forms.ModelForm):
         fields = '__all__'
     
     def clean(self):
+        """Validate stock changes."""
         cleaned_data = super().clean()
         add = cleaned_data.get('add_stock') or 0
         remove = cleaned_data.get('remove_stock') or 0
         current_stock = self.instance.stock if self.instance.pk else 0
         
+        # Can't add and remove simultaneously
         if add > 0 and remove > 0:
             raise forms.ValidationError(
                 "No puedes añadir y retirar stock simultáneamente, utiliza solo uno de los campos."
             )
         
+        # Can't remove more than current stock
         if remove > current_stock:
             raise forms.ValidationError(
                 f"No puedes retirar {remove} unidades. El stock actual es de {current_stock} unidades."
@@ -63,6 +78,10 @@ class StockManagementForm(forms.ModelForm):
 
 @admin.register(StoreProduct)
 class StoreProductAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for StoreProduct model.
+    Provides enhanced stock management and product info display.
+    """
     form = StockManagementForm
     list_display = ('id', 'name', 'category', 'get_price_display', 'get_price_with_iva_display', 
                    'stock', 'get_stock_status', 'fk_company')
@@ -89,7 +108,7 @@ class StoreProductAdmin(admin.ModelAdmin):
     get_price_with_iva_display.short_description = "Precio con IVA"
     
     def get_stock_status(self, obj):
-        """Display stock status with colors"""
+        """Display colored stock status indicator."""
         if obj.stock <= 0:
             return format_html(
                 '<span style="color: #ff0000; font-weight: bold;">Sin stock</span>'
@@ -105,7 +124,10 @@ class StoreProductAdmin(admin.ModelAdmin):
     get_stock_status.short_description = "Estado"
     
     def save_model(self, request, obj, form, change):
-        """Handle stock changes when saving the model"""
+        """
+        Handle stock changes when saving the product.
+        Records stock movements with user and reason.
+        """
         add_stock = form.cleaned_data.get('add_stock') or 0
         remove_stock = form.cleaned_data.get('remove_stock') or 0
         notes = form.cleaned_data.get('stock_notes') or ""
@@ -113,7 +135,7 @@ class StoreProductAdmin(admin.ModelAdmin):
         # Save object first so it has an ID if it's new
         super().save_model(request, obj, form, change)
         
-        # If it's a new object, register an initial stock movement
+        # If it's a new object, register an initial stock 
         if not change:
             StockMovement.objects.create(
                 product=obj,
@@ -153,6 +175,10 @@ class StoreProductAdmin(admin.ModelAdmin):
 
 @admin.register(StockMovement)
 class StockMovementAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for StockMovement model.
+    Read-only view of stock movement history.
+    """
     list_display = ('id', 'product', 'movement_type', 'quantity', 'previous_stock', 
                    'new_stock', 'user', 'created_at')
     list_filter = ('movement_type', 'product__category', 'created_at')
@@ -162,7 +188,9 @@ class StockMovementAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     
     def has_add_permission(self, request):
+        """Prevent manual creation of stock movements."""
         return False
     
     def has_change_permission(self, request, obj=None):
-        return False  # Stock movements should not be modified
+        """Prevent editing stock movements."""
+        return False  

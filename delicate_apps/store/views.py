@@ -1,3 +1,7 @@
+"""
+API views for store product management.
+"""
+
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
@@ -7,20 +11,20 @@ from .models import StoreProduct
 from .serializers import StoreProductSerializer, StoreProductDetailSerializer
 import cloudinary.uploader
 
-# Get all products with optional filtering
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_all_products(request):
-    # Params for filtering existing
+    """Get all products with optional filtering."""
+    # Extract filter parameters
     category = request.query_params.get('category', None)
     company_id = request.query_params.get('company_id', None)
     type_id = request.query_params.get('type_id', None)
     name = request.query_params.get('name', None)
     
-    # Get all products
+    # Start with all products
     products = StoreProduct.objects.all()
     
-    # Apply filters
+    # Apply filters if provided
     if category:
         products = products.filter(category__icontains=category)
     if company_id:
@@ -36,6 +40,7 @@ def get_all_products(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_product_by_id(request, id):
+    """Get a specific product by ID with all details."""
     try:
         product = get_object_or_404(StoreProduct, pk=id)
         serializer = StoreProductDetailSerializer(product)
@@ -49,10 +54,11 @@ def get_product_by_id(request, id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_product(request):
-    # Manage image upload to Cloudinary
+    """Create a new product with image upload to Cloudinary."""
+    # Handle image upload if provided
     if 'image' in request.FILES:
         try:
-            # Add the image to Cloudinary
+            # Upload image to Cloudinary
             upload_result = cloudinary.uploader.upload(
                 request.FILES['image'], 
                 folder='productos/',
@@ -70,6 +76,7 @@ def create_product(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
     
+    # Create product
     serializer = StoreProductSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -79,17 +86,18 @@ def create_product(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_product_by_id(request, id):
+    """Update an existing product with optional image replacement."""
     try:
         product = get_object_or_404(StoreProduct, pk=id)
         
-        # Manage image upload to Cloudinary
+        # Handle image upload if provided
         if 'image' in request.FILES:
             try:
-                # If the image is existing, delete it from Cloudinary
+                # Delete existing image if present
                 if product.image:
                     cloudinary.uploader.destroy(product.image.public_id)
                 
-                # Upload the new image to Cloudinary
+                # Upload new image
                 upload_result = cloudinary.uploader.upload(
                     request.FILES['image'], 
                     folder='productos/',
@@ -107,6 +115,7 @@ def update_product_by_id(request, id):
                     status=status.HTTP_400_BAD_REQUEST
                 )
         
+        # Update product
         serializer = StoreProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -121,13 +130,15 @@ def update_product_by_id(request, id):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_product_by_id(request, id):
+    """Delete a product and its image from Cloudinary."""
     try:
         product = get_object_or_404(StoreProduct, pk=id)
         
-        # Delete the image from Cloudinary
+        # Delete image from Cloudinary if present
         if product.image:
             cloudinary.uploader.destroy(product.image.public_id)
         
+        # Delete product
         product.delete()
         return Response(
             {"message": "Producto eliminado correctamente"},
@@ -139,18 +150,18 @@ def delete_product_by_id(request, id):
             status=status.HTTP_404_NOT_FOUND
         )
 
-# Get products by company ID
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_products_by_company(request, company_id):
+    """Get all products for a specific company."""
     products = StoreProduct.objects.filter(fk_company=company_id)
     serializer = StoreProductSerializer(products, many=True)
     return Response(serializer.data)
 
-# Get products by type ID
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_products_by_type(request, type_id):
+    """Get all products for a specific business type."""
     products = StoreProduct.objects.filter(fk_type=type_id)
     serializer = StoreProductSerializer(products, many=True)
     return Response(serializer.data)
