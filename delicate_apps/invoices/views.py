@@ -1,3 +1,7 @@
+"""
+API views for invoice management and CSV export functionality.
+"""
+
 import pandas as pd
 import io 
 from django.shortcuts import get_object_or_404
@@ -15,11 +19,14 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 
-# Export an invoice and its details to CSV format (API version)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def export_invoice_to_csv(request, id):
-    """Export a single invoice and its details to CSV format"""
+    """
+    Export a single invoice and its details to CSV format.
+    
+    Available to authenticated users via API.
+    """
     if request.user.is_authenticated:
         try:
             invoice = get_object_or_404(Invoice, pk=id)
@@ -38,14 +45,14 @@ def export_invoice_to_csv(request, id):
                     'Total_con_IVA': float(item.get_total_with_iva())
                 })
             
-            # Create DataFrame for invoice header with better error handling
+            # Get invoice data with better error handling
             company_name = invoice.fk_company.name if invoice.fk_company and hasattr(invoice.fk_company, 'name') else 'N/A'
             
-            # Usar el campo name para el usuario en lugar de first_name/last_name
+            # Use name field for user instead of first_name/last_name
             if invoice.fk_user and hasattr(invoice.fk_user, 'name'):
                 user_name = invoice.fk_user.name
             elif invoice.fk_user and hasattr(invoice.fk_user, 'email'):
-                # Si no hay nombre disponible, usar el email como alternativa
+                # If no name available, use email as alternative
                 user_name = invoice.fk_user.email
             else:
                 user_name = 'N/A'
@@ -56,21 +63,21 @@ def export_invoice_to_csv(request, id):
             else:
                 type_name = 'N/A'
             
-            # Crear el contenido CSV manualmente para mayor control
+            # Create CSV content manually for better control
             buffer = io.StringIO()
             
-            # Escribir encabezado para la factura
-            buffer.write("DATOS DE FACTURA\n")  # Quitamos el # para evitar que se interprete como comentario
+            # Write header for the invoice
+            buffer.write("DATOS DE FACTURA\n")  
             buffer.write("ID,Fecha,Tipo,Forma_de_Pago,Empresa,Usuario,Total_Neto,IVA_Total,Total\n")
             
-            # Escribir datos de la factura
+            # Write header for items
             buffer.write(f"{invoice.id},{invoice.date},{type_name},{invoice.payment_form},{company_name},{user_name},{invoice.neto},{float(invoice.get_iva_amount())},{float(invoice.get_total())}\n\n")
             
             # Escribir encabezado para los items
             buffer.write("DETALLES DE FACTURA\n")
             buffer.write("Producto,Cantidad,Precio_Unitario,Subtotal,IVA,Total_con_IVA\n")
             
-            # Escribir datos de los items
+            # Write item data
             for item in items:
                 product_name = item.product.name if item.product and hasattr(item.product, 'name') else 'N/A'
                 quantity = item.quantity
@@ -98,14 +105,17 @@ def export_invoice_to_csv(request, id):
             status=status.HTTP_401_UNAUTHORIZED
         )
 
-# Admin-specific view for exporting invoices to CSV
 @staff_member_required
 def admin_export_invoice_to_csv(request, id):
-    """View specifically for exporting invoices from the admin panel"""
+    """
+    Export invoice to CSV from the admin panel.
+    
+    Only available to staff members.
+    """
     try:
         invoice = get_object_or_404(Invoice, pk=id)
         
-        # Create a DataFrame for the invoice details
+        # Get invoice items
         items = invoice.items.all()
         items_data = []
         
@@ -119,35 +129,34 @@ def admin_export_invoice_to_csv(request, id):
                 'Total_con_IVA': float(item.get_total_with_iva())
             })
         
-        # Create DataFrame for invoice header with better error handling
+        # Get invoice data safely
         company_name = invoice.fk_company.name if invoice.fk_company and hasattr(invoice.fk_company, 'name') else 'N/A'
         
-        # Use the name field for the user instead of first_name/last_name
+        # Get user information safely
         if invoice.fk_user and hasattr(invoice.fk_user, 'name'):
             user_name = invoice.fk_user.name
         elif invoice.fk_user and hasattr(invoice.fk_user, 'email'):
-            # If no name is available, use email as alternative
             user_name = invoice.fk_user.email
         else:
             user_name = 'N/A'
         
-        # Handle type name safely
+        # Get type information safely
         if invoice.fk_type and hasattr(invoice.fk_type, 'name'):
             type_name = invoice.fk_type.name
         else:
             type_name = 'N/A'
         
-        # Create CSV content manually for better control
+        # Create CSV manually
         buffer = io.StringIO()
         
-        # Write header for the invoice
+        # Write invoice header
         buffer.write("DATOS DE FACTURA\n")
         buffer.write("ID,Fecha,Tipo,Forma_de_Pago,Empresa,Usuario,Total_Neto,IVA_Total,Total\n")
         
         # Write invoice data
         buffer.write(f"{invoice.id},{invoice.date},{type_name},{invoice.payment_form},{company_name},{user_name},{invoice.neto},{float(invoice.get_iva_amount())},{float(invoice.get_total())}\n\n")
         
-        # Write header for items
+        # Write items header
         buffer.write("DETALLES DE FACTURA\n")
         buffer.write("Producto,Cantidad,Precio_Unitario,Subtotal,IVA,Total_con_IVA\n")
         
@@ -162,7 +171,7 @@ def admin_export_invoice_to_csv(request, id):
             
             buffer.write(f"{product_name},{quantity},{price},{subtotal},{iva},{total_with_iva}\n")
         
-        # Create response
+        # Prepare response
         filename = f"factura_{invoice.id}_{datetime.now().strftime('%Y%m%d')}.csv"
         response = HttpResponse(buffer.getvalue(), content_type='text/csv')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
@@ -174,10 +183,10 @@ def admin_export_invoice_to_csv(request, id):
         error_details = traceback.format_exc()
         return HttpResponse(f"Error al exportar la factura: {str(e)}<br><pre>{error_details}</pre>", status=400, content_type='text/html')
 
-# Obtain all invoices with optional filtering
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_all_invoices(request):
+    """Get all invoices with optional filtering."""
     # Filter parameters
     type_id = request.query_params.get('type_id', None)
     company_id = request.query_params.get('company_id', None)
@@ -197,10 +206,10 @@ def get_all_invoices(request):
     serializer = InvoiceSerializer(invoices, many=True)
     return Response(serializer.data)
 
-# Obtain an invoice by ID
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_invoice_by_id(request, id):
+    """Get a specific invoice by ID with all details."""
     try:
         invoice = get_object_or_404(Invoice, pk=id)
         serializer = InvoiceDetailSerializer(invoice)
@@ -211,10 +220,10 @@ def get_invoice_by_id(request, id):
             status=status.HTTP_404_NOT_FOUND
         )
 
-# Create a new invoice
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_invoice(request):
+    """Create a new invoice with optional items."""
     with transaction.atomic():
         try:
             # Create invoice
@@ -255,10 +264,10 @@ def create_invoice(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-# Update an existing invoice
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_invoice_by_id(request, id):
+    """Update an existing invoice."""
     try:
         invoice = get_object_or_404(Invoice, pk=id)
         serializer = InvoiceSerializer(invoice, data=request.data, partial=True)
@@ -272,10 +281,10 @@ def update_invoice_by_id(request, id):
             status=status.HTTP_404_NOT_FOUND
         )
 
-# Delete an invoice
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_invoice_by_id(request, id):
+    """Delete an invoice."""
     try:
         invoice = get_object_or_404(Invoice, pk=id)
         invoice.delete()
@@ -289,26 +298,26 @@ def delete_invoice_by_id(request, id):
             status=status.HTTP_404_NOT_FOUND
         )
 
-# Get invoices by type
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_invoices_by_type(request, type_id):
+    """Get all invoices for a specific business type."""
     invoices = Invoice.objects.filter(fk_type=type_id)
     serializer = InvoiceSerializer(invoices, many=True)
     return Response(serializer.data)
 
-# Get invoices by company
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_invoices_by_company(request, company_id):
+    """Get all invoices for a specific company."""
     invoices = Invoice.objects.filter(fk_company=company_id)
     serializer = InvoiceSerializer(invoices, many=True)
     return Response(serializer.data)
 
-# Get invoices by user
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_invoices_by_user(request, user_id):
+    """Get all invoices for a specific user."""
     invoices = Invoice.objects.filter(fk_user=user_id)
     serializer = InvoiceSerializer(invoices, many=True)
     return Response(serializer.data)
