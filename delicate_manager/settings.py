@@ -16,33 +16,25 @@ from dotenv import load_dotenv
 import sys
 import cloudinary.uploader
 import cloudinary.api
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = BASE_DIR / ".env"
-dotenv_path = BASE_DIR / ".env"
 sys.path.append(os.path.join(BASE_DIR, 'delicate_apps'))
 if dotenv_path.exists():
     load_dotenv(dotenv_path)
-if dotenv_path.exists():
-    load_dotenv(dotenv_path)
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECURITY_KEY', 'django-insecure-t1#2dnyy1$o#h38=euicqba8%wfi!-=c7joo7+sbs-^yf_l+x7')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-
-
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
-
 # Application definition
-
 INSTALLED_APPS = [
     # Aplicaciones propias
     'delicate_apps.users',
@@ -62,6 +54,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
+    'drf_yasg',
     # Cloudinary apps
     'cloudinary_storage',
     'cloudinary',
@@ -97,13 +90,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'delicate_manager.wsgi.application'
-
-
 # Database configuration
 # Determinar si se usa la base de datos local o remota
 USE_LOCAL_DB = os.environ.get('USE_LOCAL_DB', 'False') == 'True'
 USE_SQLITE = os.environ.get('USE_SQLITE', 'False') == 'True'
-
 # Configuración de bases de datos
 if USE_LOCAL_DB:
     # Configuración PostgreSQL local
@@ -137,11 +127,8 @@ else:
             'PORT': os.getenv("DB_PORT"),
         }
     }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -156,28 +143,19 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración CORS
@@ -201,8 +179,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-from datetime import timedelta
-
+# Configuración de Simple JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -243,6 +220,5 @@ CLOUDINARY_STORAGE = {
 
 # Configura el storage por defecto
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 # Configura el prefijo de URL para Cloudinary
 CLOUDINARY_URL_PREFIX = os.getenv('CLOUDINARY_URL_PREFIX')
