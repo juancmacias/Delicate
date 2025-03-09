@@ -1,6 +1,14 @@
+"""
+Type models for business type classification.
+"""
+
 from django.db import models
 
 class Type(models.Model):
+    """
+    Business type classification model.
+    Used to categorize businesses by their commercial activity.
+    """
     id = models.AutoField(primary_key=True)
     name_type = models.CharField(max_length=30, verbose_name="Tipo de comercio")
 
