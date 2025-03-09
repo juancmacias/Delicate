@@ -1,0 +1,552 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("custom.css");
+.poppins-thin {
+  font-family: "Poppins", serif;
+  font-weight: 100;
+  font-style: normal;
+}
+.raleway-thin {
+  font-family: "Raleway", serif;
+  font-weight: 100;
+  font-style: normal;
+  letter-spacing: 0.25em;
+}
+.cinzel-thin {
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+body {
+  font-family: "Poppins", serif;
+  font-weight: 100;
+  font-style: normal;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 1024px;
+  background-color: #191919;
+  color: white;
+}
+#all {
+  background-color: #111111;
+}
+header,
+section,
+footer {
+  padding: 20px;
+  text-align: center;
+}
+header {
+  background: url("{{ url_for('static', path='img/header-image.jpg') }}")
+    no-repeat center/cover;
+  padding: 100px 20px;
+}
+.products,
+.footer {
+  background-color: #222;
+  padding: 40px 20px;
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+.card {
+  max-width: 250px;
+  background: #333;
+  padding: 20px;
+  border-radius: 10px;
+}
+.card img {
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+}
+.card .precio_producto {
+  display: flex;
+  justify-content: space-between;
+}
+button {
+  background-color: unset;
+  color: #f3eded;
+  border: 1.2px solid;
+  padding: 10px;
+  cursor: pointer;
+
+  padding: 10px;
+}
+#principal {
+  margin: 0;
+  color: white;
+  text-align: center;
+
+  background-size: cover;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+nav {
+  display: flex;
+  gap: 20px;
+}
+a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+.hero {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  height: 80vh;
+
+  text-align: left;
+}
+.hero h1 {
+  font-size: 3.3em;
+  max-width: 75%;
+}
+.buttons {
+  margin-top: 20px;
+}
+.btn {
+  padding: 10px 20px;
+  border: 2px solid white;
+  color: white;
+  background: transparent;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 10px;
+}
+.about {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4a3224;
+
+  color: white;
+  text-align: left;
+}
+.about-text {
+  max-width: 50%;
+  padding: 20px;
+}
+.about img {
+  max-width: 50%;
+  height: auto;
+}
+.about button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+.benefits {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #111;
+  padding: 20px;
+}
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.benefit-item img {
+  width: 40px;
+  height: auto;
+}
+.benefit-text {
+  text-align: left;
+}
+.benefit-text h4 {
+  margin: 0;
+  font-size: 0.7m;
+  font-weight: bold;
+}
+.benefit-text p {
+  margin: 0;
+  font-size: 0.6em;
+  color: #ccc;
+}
+footer {
+  background-color: #111;
+  padding: 20px;
+  text-align: center;
+}
+.footer-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.footer-section {
+  max-width: 200px;
+  text-align: left;
+  font-size: 0.8em;
+}
+.footer-section h4 {
+  margin-bottom: 10px;
+  font-size: 1em;
+}
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+.footer-section ul li {
+  margin: 5px 0;
+}
+.footer-section ul li a {
+  color: white;
+  text-decoration: none;
+}
+.payments img {
+  width: 30px;
+  margin: 10px;
+}
+.footer-payment {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+hr {
+  border: 1px solid #333;
+}
+
+.container {
+  display: flex;
+  max-width: 900px;
+  margin: 50px auto;
+  background-color: #111;
+  padding: 20px;
+}
+.image-container {
+  width: 50%;
+}
+.image-container img {
+  width: 100%;
+  border-radius: 10px;
+}
+.product-info {
+  width: 50%;
+  padding: 20px;
+  text-align: left;
+}
+.product-info h1 {
+  font-size: 2rem;
+}
+.price {
+  font-size: 1.8rem;
+  color: red;
+  font-weight: bold;
+}
+.button {
+  display: block;
+
+  padding: 10px;
+  border: 1px solid white;
+  color: white;
+  background: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin: 20px 0;
+}
+.description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #ccc;
+}
+.container-login {
+  display: flex;
+} /* Sección Izquierda - Login */
+.login-section {
+  width: 50%;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+.login-section h1 {
+  font-family: serif;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.login-section p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+.form-group {
+  width: 100%;
+  max-width: 400px;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  background-color: white;
+  color: black;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+.checkbox-container input {
+  width: auto;
+  margin-right: 10px;
+}
+.forgot-password {
+  color: red;
+  text-align: right;
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+.login-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 1px solid white;
+  background: none;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.register-text {
+  margin-top: 20px;
+  font-size: 1rem;
+}
+.register-text a {
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+} /* Sección Derecha - Imagen */
+.image-section {
+  width: 50%;
+  background: url("imagen-productos.jpg") no-repeat center center;
+  background-size: cover;
+}
+.container-register {
+  display: flex;
+} /* Sección Izquierda - Formulario de Registro */
+.register-section {
+  width: 50%;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.register-section h1 {
+  font-family: serif;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.register-section p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+.input-group input {
+  width: 50%;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  background-color: white;
+  color: black;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+.checkbox-container input {
+  width: auto;
+  margin-right: 10px;
+}
+.checkbox-container label a {
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+}
+.register-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 1px solid white;
+  background: none;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.login-text {
+  margin-top: 20px;
+  font-size: 1rem;
+}
+.login-text a {
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+} /* Sección Derecha - Imagen */
+
+/*  user */
+.container_user {
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+} /* Estilos del Título */
+h1 {
+  font-family: serif;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+hr {
+  border: 1px solid white;
+  margin-bottom: 20px;
+} /* Formulario de Perfil */
+.profile-form h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+  margin: auto;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  background-color: white;
+  border: none;
+  font-size: 1rem;
+  color: black;
+  border-radius: 5px;
+} /* Contenedor de Contraseña */
+.password-container {
+  position: relative;
+}
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.2rem;
+} /* Botón Guardar Cambios */
+.save-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 1px solid white;
+  background: none;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.save-button:hover {
+  background-color: white;
+  color: black;
+} /* Tabla de Historial de Pedidos */
+.order-history {
+  margin-top: 30px;
+}
+.order-history h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+th,
+td {
+  border: 1px solid white;
+  padding: 12px;
+  text-align: center;
+}
+th {
+  font-weight: bold;
+}
+#cart_menu_num {
+  position: absolute;
+  top: 0;
+  left: 55%;
+  background: red;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 2px;
+  font-size: 0.7em;
+  font-weight: 500;
+  display: none;
+}
+.menu {
+  position: relative;
+  display: inline-block;
+}
+.menu-btn {
+
+  cursor: pointer;
+}
+.menu-content {
+  display: none;
+  position: absolute;
+  background: white;
+  min-width: 120px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+.menu-content a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: black;
+}
+.menu-content a:hover {
+  background: #ddd;
+}
+.show {
+  display: block;
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet {{ company.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+    <style>
+      .hero {
+        display: none !important;
+      }
+      #principal {
+        background: none !important;
+      }
+    </style>
+    <div id="all">
+      {% include "include/header.html" %}
+      <div class="container-login">
+        <!-- Sección de Login -->
+        <div class="login-section">
+          <h1>LOGIN</h1>
+          <p>Logueate para acceder a tu cuenta</p>
+          <form id="login-form" action="/login" method="POST">
+          <div class="form-group">
+            <input name="username" id="username" type="text" placeholder="Email" />
+            <input name="password" id="password" type="password" placeholder="Contraseña" />
+            <div class="checkbox-container">
+              <input type="checkbox" id="remember" />
+              <label for="remember">Remember me</label>
+            </div>
+            <a href="#" class="forgot-password">¿Recuperar contraseña?</a>
+            <button class="login-button">INICIAR SESIÓN</button>
+          </div>
+          </form>
+          <p class="register-text">
+            ¿No tienes una cuenta? <a href="/register">Regístrate</a>
+          </p>
+        </div>
+        <!-- Sección de Imagen -->
+         <style>
+            .image-section {
+                background: url("{{ url_for('static', path='img/login.png') }}") no-repeat center center;
+            }
+         </style>
+
+        <div class="image-section"></div>
+      </div>
+
+      {% include "include/footer.html" %}
+    </div>
+    <script>
+      document.getElementById("login-form").addEventListener("submit", async function(event) {
+          event.preventDefault();
+          
+          let username = document.getElementById("username").value;
+          let password = document.getElementById("password").value;
+
+          let response = await fetch("/v1/token", {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({ "username": username, "password": password })
+          });
+
+          let result = await response.json();
+          
+          if (response.ok) {
+              localStorage.setItem("token", result.access_token);
+              //document.getElementById("response").innerText = "¡Login exitoso!";
+              checkProtectedRoute();
+              console.log(result);
+              window.location.href = '/users';
+          } else {
+              document.getElementById("response").innerText = "Error: " + result.detail;
+          }
+      });
+
+      async function checkProtectedRoute() {
+          let token = localStorage.getItem("token");
+          if (!token) return;
+
+          let response = await fetch("/v1/protected", {
+              headers: { "Authorization": "Bearer " + token }
+          });
+
+          let result = await response.json();
+          document.getElementById("response").innerText = result.message || "Error en ruta protegida";
+      }
+  </script>
+  </body>
+</html>

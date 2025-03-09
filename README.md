@@ -1,5 +1,5 @@
 # 🚀 Proyecto: Delicaté
-
+## Repositorio Public-Dev
 ## Equipo
 <div align="center">
   <img src="https://avatars.githubusercontent.com/u/53483587?v=4" width="64" alt="Juan Carlos Macías">
@@ -36,13 +36,13 @@ Desarrollar una API REST y una base de datos SQL que permitan al cliente gestion
 
 ## 🛠️ Requisitos Técnicos
 
-1. Base de datos SQL (PostgreSQL, MySQL, etc.)
-2. API REST (usando Flask, FastAPI, Django REST Framework, etc.)
-3. Sistema de autenticación y autorización
+1. ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Base de datos SQL (PostgreSQL, MySQL, etc.)
+2. ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) API REST (usando Flask, FastAPI, Django REST Framework, etc.)
+3. ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Sistema de autenticación y autorización
 4. Documentación completa de la API
 5. Tests unitarios y de integración
-6. Control de versiones con Git y GitHub
-7. Gestión del proyecto con metodologías ágiles (SCRUM)
+6. ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Control de versiones con Git y GitHub
+7. ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Gestión del proyecto con metodologías ágiles (SCRUM)
 
 
 ## 📦 Entregables
@@ -58,27 +58,27 @@ Desarrollar una API REST y una base de datos SQL que permitan al cliente gestion
 
 ### Nivel Esencial 🥉
 
-- Mínimo 3 tablas relacionadas en la base de datos
-- API REST con operaciones CRUD básicas
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Mínimo 3 tablas relacionadas en la base de datos
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) API REST con operaciones CRUD básicas
 - Tests unitarios para cada endpoint
-- Documentación en Markdown
-- Gestión de proyecto con Kanban
-- Variables de entorno para datos sensibles
-- Logging básico
-- Manejo de excepciones simple
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Documentación en Markdown
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Gestión de proyecto con Kanban
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Variables de entorno para datos sensibles
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Logging básico
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Manejo de excepciones simple
 
 ### Nivel Medio 🥈
 
-- Estructura de base de datos más compleja (5+ tablas)
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Estructura de base de datos más compleja (5+ tablas)
 - Documentación interactiva (Swagger)
 - Manejo avanzado de errores con códigos HTTP apropiados
-- Exportación de datos a CSV
-- Filtrado y paginación en endpoints GET
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Exportación de datos a CSV
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Filtrado y paginación en endpoints GET
 
 ### Nivel Avanzado 🥇
 
-- Autenticación con JWT
-- Roles de usuario y permisos
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Autenticación con JWT
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Roles de usuario y permisos
 - Caché de respuestas para optimizar rendimiento
 - Implementación de websockets para actualizaciones en tiempo real
 
@@ -87,7 +87,7 @@ Desarrollar una API REST y una base de datos SQL que permitan al cliente gestion
 - Contenedorización con Docker
 - Despliegue en la nube (AWS, Google Cloud, etc.)
 - Integración con servicios externos (pagos, notificaciones, etc.)
-- Interfaz de usuario básica (web o móvil)
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Interfaz de usuario básica (web o móvil)
 
 ## 💡 Consejos
 
@@ -98,28 +98,35 @@ Desarrollar una API REST y una base de datos SQL que permitan al cliente gestion
 
 ## 🌟 Evaluacion
 Competencia:  Gestionar eficientemente proyectos de desarrollo con herramientas de control de versiones
-- Uso de github, gitlab o bitbucket
-- Conectar repo local al remoto
-- Uso de gitflow methodology
-- Uso de commits descriptivos
-- Uso apropiado de ramas
-- Uso de nomenclatura en commits
-- Uso de nomenclatura en ramas
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Uso de github, gitlab o bitbucket
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Conectar repo local al remoto
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Uso de gitflow methodology
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Uso de commits descriptivos
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg) Uso apropiado de ramas
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg)Uso de nomenclatura en commits
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg)Uso de nomenclatura en ramas
 
 Competencia: Ser capaz de desarrollar un programa en Python
-- Uso de Control de errores (cláusula try/except)
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg)Uso de Control de errores (cláusula try/except)
 - Uso de herramientas de logger
-- Uso de frameworks (FastAPI, Flask, Django)
-- Uso de librerias
-- Uso de  Entornos virtuales (venv, conda, virtualenv)
-- Uso de Archivo de dependencias (requirements.txt)
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg)Uso de frameworks (FastAPI, Flask, Django)
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg)Uso de librerias
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg)Uso de  Entornos virtuales (venv, conda, virtualenv)
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg)Uso de Archivo de dependencias (requirements.txt)
   
 Competencia: Diseñar y gestionar bases de datos de manera eficiente
-- Uso de Modelado de datos
-- Uso de Normalización de datos
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg)Uso de Modelado de datos
+- ![.](https://cdn.jsdelivr.net/gh/Readme-Workflows/Readme-Icons@main/icons/octicons/IssueClosed.svg)Uso de Normalización de datos
   
 Competencia:  Implementar tests para garantizar la calidad del software
 - Uso de Test Unitarios
 - Uso de Test de Integración
 
-¡Buena suerte con tu proyecto! 🍀
+Requisitos:  Python 3.10
+
+```
+# crear entorno -> python -m venv env
+# activar entorno -> env\Scripts\activate
+# instalar  -> pip install -r requirements.txt
+# iniciar el servidor -> uvicorn app.main:app --reload
+```

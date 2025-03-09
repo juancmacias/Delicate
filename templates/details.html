@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet {{ company.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+    <style>
+      .hero {
+        display: none !important;
+      }
+      #principal {
+        background: none !important;
+      }
+
+    </style>
+    <div id="all">
+      {% include "include/header.html" %}
+      <div id="lista-Productos" class="container agregar-detalle">
+        <div class="image-container">
+          <img
+            src="https://res.cloudinary.com/dpqopnap4/{{ detalails.image }}"
+            alt="{{ detalails.name }}"
+          />
+        </div>
+        <div class="product-info">
+          <h1 class="cinzel-thin name">{{ detalails.name }}</h1>
+          <p class="price precio"><span>{{ detalails.net_price  }}</span> €</p>
+
+          <button class="raleway-thin button agregar-carrito" data-id="{{ detalails.id }}">Agragar a la cesta</button>
+          <p class="description">
+            {{ detalails.description }}
+          </p>
+        </div>
+      </div>
+
+      {% include "include/footer.html" %}
+    </div>
+  </body>
+</html>

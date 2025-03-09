@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet de {{ company.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+    <div id="all">
+      {% include "include/header.html" %}
+      <section class="products">
+        <h2 class="cinzel-thin">Nuestros Productos</h2>
+        <div id="lista-Productos" class="product-grid">
+          <!-- listado de productos-->
+          {% for producto in all_products %}
+          {% set iva = producto.net_price * (producto["iva"] / 100) %}
+          {% set precio_total = producto["net_price"] + iva %}
+
+          <div class="card agregar_all">
+            <a href="/details/{{ producto['id'] }}"
+              target="_top"
+              title="{{ producto['name'] }}"
+            >
+              <img src="https://res.cloudinary.com/dpqopnap4/{{ producto['image'] }}" alt="{{ producto['name'] }}" />
+            </a>
+            <div class="precio_producto">
+              <p class="name">{{ producto['name'] }}</p>
+              <p class="precio"><span>{{ precio_total }}</span> €</p>
+            </div>
+            <button class="raleway-thin button agregar-carrito" data-id="{{ producto['id'] }}">
+              Comprar
+            </button>
+          </div>
+          {% endfor %}
+          <!-- fin listado de productos-->
+
+        </div>
+      </section>
+      {% include "include/about.html" %} {% include "include/footer.html" %}
+    </div>
+  </body>
+</html>

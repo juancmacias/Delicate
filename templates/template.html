@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet factura</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+    <style>
+      .hero {
+        display: none !important;
+      }
+      #principal {
+        background: none !important;
+      }
+    </style>
+    <div id="all">
+      <div class="logo">
+        <img src="../static/img/logo.png" alt="Delicate Logo" width="120" />
+      </div>
+      <div class="container_user">
+        <h1 class="cinzel-thin">Factura numeroA</h1>
+        <hr />
+
+        <!-- Historial de pedidos -->
+        <section class="order-history">
+          <h2>Historial de facturas, cliente: clienteA</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Nº factura</th>
+                <th>Articulos</th>
+                <th>importe</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- listar los pedidos-->
+              {% for invoid in invoices %}
+              <tr>
+                <td>{{ invoid['date'] }}</td>
+                <td><a href="/generate-invoice/" target="_top"> {{ invoid['id'] }}</a></td>
+                <td></td>
+                <td>{{ invoid['neto'] }}</td>
+              </tr>
+              {% endfor %}
+              <!-- fin lista de pedidos-->
+            </tbody>
+          </table>
+        </section>
+        <hr />
+        <!-- Formulario de edición -->
+        <section class="profile-form">
+          <h2 class="cinzel-thin">Modifica tu información</h2>
+          <form
+            action="/users"
+            id="envio"
+            method="post"
+            onsubmit="delaySubmit(event)"
+          >
+            <input
+              name="username"
+              type="text"
+              placeholder="Nombre"
+              value="{{ user.username }}"
+            />
+            <input
+              name="first_name"
+              type="text"
+              placeholder="Apellido"
+              value="{{ user.last_name }}"
+            />
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              value="{{ user.email }}"
+              required
+            />
+            <input
+              name="re_email"
+              type="email"
+              placeholder="Confirma tu email"
+              value=""
+              required
+            />
+            <div class="password-container">
+              <input
+                name="password"
+                type="password"
+                id="password"
+                placeholder="Contraseña"
+                value=""
+                required
+              />
+              <span class="toggle-password" onclick="togglePassword('password')"
+                >👁️</span
+              >
+            </div>
+            <div class="password-container">
+              <input
+                name="confirm_password"
+                type="password"
+                id="confirm-password"
+                placeholder="Confirma la contraseña"
+                required
+              />
+              <span
+                class="toggle-password"
+                onclick="togglePassword('confirm-password')"
+                >👁️</span
+              >
+            </div>
+            <button type="submit" class="save-button">GUARDAR CAMBIOS</button>
+          </form>
+          <script>
+            function delaySubmit(event) {
+              event.preventDefault(); // Evita que el formulario se envíe de inmediato
+              localStorage.removeItem("token");
+              // Espera 3 segundos (3000 milisegundos) antes de enviar el formulario
+              setTimeout(function () {
+                // Elimina el token de la sesión
+                document.getElementById("envio").submit(); // Envía el formulario después del retraso
+              }, 1000); // Puedes ajustar el tiempo en milisegundos
+            }
+          </script>
+        </section>
+      </div>
+
+      {% include "include/footer.html" %}
+    </div>
+    <script>
+      function togglePassword(id) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+          input.type = "text";
+        } else {
+          input.type = "password";
+        }
+      }
+    </script>
+  </body>
+</html>

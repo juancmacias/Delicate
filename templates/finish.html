@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet {{ company.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+    <style>
+      .hero {
+        display: none !important;
+      }
+      #principal {
+        background: none !important;
+      }
+
+    </style>
+    <div id="all">
+      {% include "include/header.html" %}
+      <div id="lista-Productos" class="container agregar-detalle">
+        la compra se realia con exito
+        
+        </div>
+      </div>
+
+      {% include "include/footer.html" %}
+    </div>
+  </body>
+</html>

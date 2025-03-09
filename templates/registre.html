@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda gurmet {{ company.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
+  </head>
+  <body>
+    <style>
+      .hero {
+        display: none !important;
+      }
+      #principal {
+        background: none !important;
+      }
+    </style>
+    <div id="all">
+      {% include "include/header.html" %}
+      <div class="container-register">
+        <!-- Sección de Registro -->
+        <div class="register-section">
+          <h1>REGISTRARSE</h1>
+          <p>Regístrate para poder comprar nuestros productos</p>
+          {{ error }}
+          <form action="/register" method="post" autocomplete="off">
+            <div class="input-group">
+              <input name="username" type="text" placeholder="Nombre" />
+              <input name="last_name" type="text" placeholder="Apellido" />
+            </div>
+            <div class="input-group">
+              <input name="email" id="email" type="email" placeholder="Email" />
+              <input type="email" placeholder="Confirma tu email" />
+            </div>
+            <input name="password" type="password" placeholder="Contraseña" />
+            <input type="password" placeholder="Confirma la contraseña" />
+            <div class="checkbox-container">
+              <input type="checkbox" id="terms" />
+              <label for="terms">
+                Estoy de acuerdo con <a href="#">Términos y condiciones</a> y
+                <a href="#">Política de privacidad</a>
+              </label>
+            </div>
+            <button type="submit" class="register-button">REGÍSTRATE</button>
+          </form>
+          <p class="login-text">¿Tienes una cuenta? <a href="login">Login</a></p>
+        </div>
+        <!-- Sección de Imagen -->
+         <style>
+            .image-section {
+                background: url("{{ url_for('static', path='img/register.png') }}") no-repeat center center;
+            }
+         </style>
+        <div class="image-section"></div>
+      </div>
+
+      {% include "include/footer.html" %}
+    </div>
+  </body>
+</html>
