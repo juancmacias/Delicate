@@ -50,5 +50,10 @@ typing
 typing_extensions  
 urllib3            
 uvicorn            
-Werkzeug           
+webencodings         
+websockets          
+Werkzeug             
+xhtml2pdf           
+zipp              
+zopfli                  
 
