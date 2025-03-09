@@ -5,6 +5,9 @@ from django.views.generic import RedirectView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.authentication import SessionAuthentication
+from django.contrib.auth import views as auth_views
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -12,11 +15,16 @@ schema_view = get_schema_view(
         default_version='v1',
         description="Documentación de la API de la aplicación Delicaté",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@example.com"),
+        contact=openapi.Contact(email="contact@delicate.com"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
+    # public=False,  # Solo usuarios autenticados
+    # permission_classes=(permissions.IsAuthenticated,),  # Requiere autenticación
+    # authentication_classes=(SessionAuthentication,),  # Autenticación basada en sesiones
+    # permission_classes=(permissions.IsAdminUser,),  # Solo administradores
+    # authentication_classes=(JWTAuthentication,),  # Usa la clase directamente
 )
 
 urlpatterns = [
@@ -35,6 +43,7 @@ urlpatterns = [
         path('users/', include('delicate_apps.users.urls')),
         path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+        # path('accounts/login/', auth_views.LoginView.as_view(), name='login'),  # URL de login de Django
     ])),
 ]
 
