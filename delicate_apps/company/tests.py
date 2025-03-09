@@ -70,7 +70,7 @@ class CompanySimpleTests(SimpleTestCase):
         self.assertEqual(serializer.data['cif'], "B12345678")
         print(f"  ✓ Serialized Company has correct CIF: '{serializer.data['cif']}'")
         
-        self.assertEqual(serializer.data['phone'], 123456789)
+        self.assertEqual(serializer.data['phone'], '123456789')
         print(f"  ✓ Serialized Company has correct phone: {serializer.data['phone']}")
         
         self.assertEqual(serializer.data['mail'], "test@company.com")
