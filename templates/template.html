@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tienda gurmet {{ company.name }}</title>
+    <title>Tienda gurmet factura</title>
     <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}" />
   </head>
   <body>
@@ -16,14 +16,16 @@
       }
     </style>
     <div id="all">
-      {% include "include/header.html" %}
+      <div class="logo">
+        <img src="../static/img/logo.png" alt="Delicate Logo" width="120" />
+      </div>
       <div class="container_user">
-        <h1 class="cinzel-thin">MI PERFIL</h1>
+        <h1 class="cinzel-thin">Factura numeroA</h1>
         <hr />
 
         <!-- Historial de pedidos -->
         <section class="order-history">
-          <h2>Historial de facturas</h2>
+          <h2>Historial de facturas, cliente: clienteA</h2>
           <table>
             <thead>
               <tr>
