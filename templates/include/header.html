@@ -14,7 +14,8 @@
       <a href="/about">Sobre Nosotros</a>
       <a href="/contact">Contacto</a>
       <div class="menu">
-        <img class="menu-btn" id="userImage" src="{{ url_for('static', path='img/user.png') }}" alt="" />
+        <a href="/users">
+          <img class="menu-btn" id="userImage"  src="{{ url_for('static', path='img/user.png') }}" alt="" /></a>
         <div class="menu-content" id="menuContent">
           <a href="#" id="loginLink">Iniciar sesión</a>
           <a href="#" id="logoutLink" style="display:none;">Cerrar sesión</a>
@@ -42,8 +43,8 @@
                 </table>
                 <div id="total">
                   <p id="suma">Total: 0€</p>
-                  <a href="#" id="vaciar-carrito" class="button u-full-width">Vaciar Carrito</a>
-                  <a href="#"  id="buy" class="button u-full-width">Terminar compra</a>
+                  <a href="#" id="vaciar-carrito" class="button u-full-width">Vaciar carrito</a>
+                  <a href="/cart" class="button u-full-width">Ver carrito</a>
                 </div>
             </div>
         </div>

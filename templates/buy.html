@@ -31,44 +31,56 @@
           <table>
             <thead>
               <tr>
-                <th>Número</th>
-                <th>Nombre</th>
-                <th>Precio Total</th>
-                <th>Nº Artículos</th>
+                <th>Referencia</th>
+                <th>Producto</th>
+                <th>Imagen</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
               </tr>
             </thead>
-
-            <tbody>
-              <!-- listar los pedidos-->
-              {% if carts %}
-              {% for cart in carts %}
-              <tr>
-                <td>1</td>
-                <td>{{ cart["titulo"] }}</td>
-                <td>{{ cart["precio"] }}</td>
-                <td>{{ cart["cantidad"] }}</td>
-              </tr>
-              {% endfor %}
-              {% else %}
-                <p>No hay productos en el carrito.</p>
-                {% endif %}
-              <!-- fin lista de pedidos-->
-            </tbody>
+            <tbody id="carrito-body"></tbody>
           </table>
+          <a href="#"  id="buy" class="button u-full-width">Terminar compra</a>
+          <script>
+            document.addEventListener("DOMContentLoaded", function() {
+              const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+              const tbody = document.getElementById("carrito-body"); // Aseguramos que existe el tbody
+          
+              if (!tbody) {
+                console.error("No se encontró el elemento tbody");
+                return;
+              }
+          
+              carrito.forEach(item => {
+                const tr = document.createElement("tr");
+          
+                tr.innerHTML = `
+                  <td>${item.product_id}</td>
+                  <td>${item.titulo}</td>
+                  <td><img width="50px" src="${item.imagen}" alt="${item.titulo}" /></td>
+                  <td>${item.precio}</td>
+                  <td>${item.cantidad}</td>
+                  <td><a href="#" onclick="removeItem('${item.product_id}')">Eliminar</a></td>
+                `;
+          
+                tbody.appendChild(tr);
+              });
+            });
+          
+            function removeItem(productId) {
+              let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+              carrito = carrito.filter(item => item.product_id !== productId);
+              localStorage.setItem("carrito", JSON.stringify(carrito));
+              location.reload();
+            }
+          </script>
+
         </section>
       </div>
 
       {% include "include/footer.html" %}
     </div>
-    <script>
-      function togglePassword(id) {
-        const input = document.getElementById(id);
-        if (input.type === "password") {
-          input.type = "text";
-        } else {
-          input.type = "password";
-        }
-      }
-    </script>
+    
   </body>
 </html>

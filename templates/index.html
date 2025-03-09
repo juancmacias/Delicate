@@ -17,7 +17,7 @@
           {% set iva = producto.net_price * (producto["iva"] / 100) %}
           {% set precio_total = producto["net_price"] + iva %}
 
-          <div class="card">
+          <div class="card agregar_all">
             <a href="/details/{{ producto['id'] }}"
               target="_top"
               title="{{ producto['name'] }}"
@@ -28,7 +28,7 @@
               <p class="name">{{ producto['name'] }}</p>
               <p class="precio"><span>{{ precio_total }}</span> €</p>
             </div>
-            <button class="raleway-thin agregar-carrito" data-id="{{ producto['id'] }}">
+            <button class="raleway-thin button agregar-carrito" data-id="{{ producto['id'] }}">
               Comprar
             </button>
           </div>

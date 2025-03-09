@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, TIMESTAMP, ForeignKey, Text, BINARY, LargeBinary
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -58,3 +58,27 @@ class Store_Cart(Base):
     precio = Column(Float)
     temp_date = Column(TIMESTAMP)
     status = Column(Boolean, default=True)
+
+class Invoid(Base):
+    __tablename__ = "invoices"
+    id = Column(Integer, primary_key=True, index=True)
+    date = Column(TIMESTAMP)
+    payment_form = Column(String)
+    neto = Column(Float)
+    fk_type = Column(Integer)
+    fk_user = Column(Integer)
+    fk_company = Column(Integer)
+
+class Invoid_Items(Base):
+    __tablename__ = "invoice_items"
+    id = Column(Integer, primary_key=True, index=True)
+    invoice_id = Column(Integer)
+    product_id = Column(Integer)
+    quantity = Column(Integer)
+    price = Column(Float)
+
+class django_Session(Base):
+    __tablename__ = "django_session"
+    session_key =   Column(String(40), primary_key=True)
+    session_data = Column(String)
+    expire_date = Column(TIMESTAMP) 
