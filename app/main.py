@@ -1,7 +1,5 @@
 from fastapi import FastAPI, APIRouter, Request, Body, Form, HTTPException, File, UploadFile, Depends, Query, Response, Header
-from typing import Annotated
-from typing import List
-import json
+
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 from fastapi_versioning import VersionedFastAPI, version
 
@@ -12,7 +10,7 @@ import secrets
 from passlib.context import CryptContext
 import jwt
 from datetime import datetime, timedelta,  timezone
-from zoneinfo import ZoneInfo 
+
 from sqlalchemy.orm import Session
 from app.models.models import *
 from app.models.crud import *
@@ -20,7 +18,7 @@ from app.models.database import get_db
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from app.auth import create_access_token_1, decode_access_token, verify_password, hash_password
-from pydantic import BaseModel, Field
+
 from datetime import timedelta
 
 import os 
@@ -149,6 +147,8 @@ async def detalails(request: Request, id: int, company_data = Depends(compay_dat
 @app.get("/pay",  response_class=HTMLResponse)
 async def pay(request: Request, db: Session = Depends(get_db), company_data = Depends(compay_data),):
     usuario = decode_access_token(request.cookies.get("session"))
+    if not usuario:
+        return RedirectResponse(url='/logout', status_code=303) 
     session_b = obtener_Sessions(db, usuario.get("sub"))
     if session_b and (session_b.expire_date) > datetime.now(timezone.utc).replace(tzinfo=timezone.utc):
         user = compro_cookie_id(request, db)
@@ -219,6 +219,8 @@ async def buy(request: Request, db: Session = Depends(get_db)):
 @app.get("/invoice", response_class=HTMLResponse)
 async def invoice(request: Request, db: Session = Depends(get_db), company_data = Depends(compay_data)):
     usuario = decode_access_token(request.cookies.get("session"))
+    if not usuario:
+        return RedirectResponse(url='/logout', status_code=303) 
     session_b = obtener_Sessions(db, usuario.get("sub"))
     if session_b and (session_b.expire_date) > datetime.now(timezone.utc).replace(tzinfo=timezone.utc):
         user = compro_cookie_id(request, db)
@@ -241,6 +243,8 @@ def login(request: Request,
                 db: Session = Depends(get_db)
                 ):
     usuario = decode_access_token(request.cookies.get("session"))
+    if not usuario:
+        return RedirectResponse(url='/logout', status_code=303) 
     session_b = obtener_Sessions(db, usuario.get("sub"))
     if session_b and (session_b.expire_date) > datetime.now(timezone.utc).replace(tzinfo=timezone.utc):
         user = compro_cookie_id(request, db)
@@ -294,6 +298,8 @@ async def read_users_me(request: Request,
                         db: Session = Depends(get_db),
                         ):
     usuario = decode_access_token(request.cookies.get("session"))
+    if not usuario:
+        return RedirectResponse(url='/logout', status_code=303) 
     session_b = obtener_Sessions(db, usuario.get("sub"))
     if session_b and (session_b.expire_date) > datetime.now(timezone.utc).replace(tzinfo=timezone.utc):
         user = compro_cookie_id(request, db)
@@ -410,7 +416,7 @@ async def generate_pdf(request: Request,
         html_content = html_content.replace("clienteA", str(user.id))
         pdf_path = f"{generar_cadena_aleatoria()}.pdf"
         pdf = pisa.CreatePDF(html_content)
-        
+
         response = Response(content=pdf.dest.getvalue(), media_type="application/pdf")
         response.headers["Content-Disposition"] = f"attachment; filename={pdf_path}"
         return response
