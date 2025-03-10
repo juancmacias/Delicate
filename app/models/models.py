@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, TIMESTAMP
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, Float, Boolean, TIMESTAMP, ForeignKey, Text, BINARY, LargeBinary
 
+try:
+    from sqlalchemy.orm import declarative_base  # SQLAlchemy 2.x
+except ImportError:
+    from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class Users_User(Base):

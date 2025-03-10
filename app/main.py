@@ -114,7 +114,7 @@ async def protected_route(token: str = Depends(oauth2_scheme)):
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, company_data = Depends(compay_data), db: Session = Depends(get_db) ):
     all_products = obtener_Products(db)
-    return templates.TemplateResponse("index.html", {
+    return templates.TemplateResponse(request, "index.html", {
         "request": request,
         "company": company_data,
         "all_products": all_products
@@ -124,7 +124,7 @@ async def home(request: Request, company_data = Depends(compay_data), db: Sessio
 @app.get("/details/{id}", response_class=HTMLResponse)
 async def detalails(request: Request, id: int, company_data = Depends(compay_data), db: Session = Depends(get_db)):
     detalails = obtener_Product_por_id(db, id)
-    return templates.TemplateResponse("details.html", {
+    return templates.TemplateResponse(request, "details.html", {
         "request": request,
         "company": company_data,
         "detalails": detalails
@@ -173,7 +173,7 @@ async def pay(request: Request, db: Session = Depends(get_db), company_data = De
             db.commit()
         db.commit()
         
-        return templates.TemplateResponse("finish.html", {
+        return templates.TemplateResponse(request, "finish.html", {
             "request": request,
             "company": company_data,
             "carts": carts
@@ -215,7 +215,7 @@ async def invoice(request: Request, db: Session = Depends(get_db), company_data 
             return RedirectResponse(url='/logout', status_code=303)
         #invoid = obtener_Invoid(db, user.id)
         carts = obtener_Cart(db, user.id, False)
-        return templates.TemplateResponse("invoice.html", {
+        return templates.TemplateResponse(request, "invoice.html", {
             "request": request,
             "company": company_data,
             "carts": carts
@@ -239,7 +239,7 @@ def login(request: Request,
             return RedirectResponse(url='/logout', status_code=303)
         carts = obtener_Cart(db, user.id, False)
         print(carts)
-        return templates.TemplateResponse("buy.html", {
+        return templates.TemplateResponse(request, "buy.html", {
             "request": request,
             "company": company_data,
             "carts": carts
@@ -250,7 +250,7 @@ def login(request: Request,
 # hacer el login
 @app.get("/login", response_class=HTMLResponse)
 async def login(request: Request, company_data = Depends(compay_data)):
-    return templates.TemplateResponse("login.html", {
+    return templates.TemplateResponse(request, "login.html", {
         "request": request,
         "company": company_data,
     })
@@ -294,7 +294,7 @@ async def read_users_me(request: Request,
             return RedirectResponse(url='/logout', status_code=303)
         cart_store = obtener_Cart(db, user.id)
         invoices = obtener_Invoices(db, user.id)
-        return templates.TemplateResponse("user.html", {
+        return templates.TemplateResponse(request, "user.html", {
             "request": request,
             "company": company_data,
             "user": user,
@@ -344,7 +344,7 @@ async def register(request: Request, err:str = None, company_data = Depends(comp
         error = "Usuario ya existe"  
     else:
         error = "" 
-    return templates.TemplateResponse("registre.html", {
+    return templates.TemplateResponse(request, "registre.html", {
         "request": request,
         "company": company_data,
         "error": error
