@@ -392,29 +392,6 @@ El desarrollo de Delicaté se ha gestionado utilizando GitHub Projects, implemen
 
 El proyecto se ha desarrollado siguiendo un enfoque incremental con los siguientes niveles de funcionalidad:
 
-### Nivel Esencial 🥉
-
-- ✅ Mínimo 3 tablas relacionadas en la base de datos
-- ✅ API REST con operaciones CRUD básicas
-- ✅ Documentación en Markdown
-- ✅ Gestión de proyecto con Kanban
-- ✅ Variables de entorno para datos sensibles
-- ✅ Logging básico
-- ✅ Manejo de excepciones simple
-
-### Nivel Medio 🥈
-
-- ✅ Estructura de base de datos más compleja (5+ tablas)
-- ✅ Documentación interactiva
-- ✅ Manejo avanzado de errores con códigos HTTP apropiados
-- ✅ Exportación de datos a CSV
-- ✅ Filtrado y paginación en endpoints GET
-
-### Nivel Avanzado 🥇
-
-- ✅ Autenticación con JWT
-- ✅ Roles de usuario y permisos
-- ✅ Interfaz de usuario básica (panel de administración)
 
 ## 🔮 Próximos Pasos
 
