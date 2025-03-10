@@ -109,11 +109,6 @@ async def protected_route(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Token inválido")
     
 
-# el icono predeterminado de la pestaña del navegador
-favicon_path = 'favicon.ico'  # Adjust path to file
-@app.get('/favicon.ico', include_in_schema=False)
-async def favicon():
-    return FileResponse(favicon_path)
 
 # Rutas
 @app.get("/", response_class=HTMLResponse)
