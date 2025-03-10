@@ -7,25 +7,26 @@
 Delicaté es una plataforma moderna que permite a empresas comercializar productos gourmet, gestionar inventario, procesar ventas y administrar clientes. El sistema cuenta con una robusta API REST construida con Django REST Framework y un panel de administración personalizado.
 
 ## 📑 Índice
-- Administración
-  - [Descripción del Proyecto](#-descripción-del-proyecto)
-  - [Tecnologías Utilizadas](#️-tecnologías-utilizadas)
-  - [Estructura de la Base de Datos](#-estructura-de-la-base-de-datos)
-  - [Estructura del Proyecto](#-estructura-del-proyecto)
-  - [Configuración del Entorno de Desarrollo](#️-configuración-del-entorno-de-desarrollo)
-  - [Ejecución del Proyecto](#-ejecución-del-proyecto)
-  - [Ejecución de Pruebas](#-ejecución-de-pruebas)
-  - [API REST](#-api-rest)
-  - [Roles de Usuario](#-roles-de-usuario)
-  - [Despliegue](#-despliegue)
-  - [Gestión del Proyecto](#-gestión-del-proyecto)
-  - [Niveles de Entrega](#-niveles-de-entrega)
-  - [Próximos Pasos](#-próximos-pasos)
-  - [Equipo de Desarrollo](#-equipo-de-desarrollo)
-  - [Cómo Contribuir](#-cómo-contribuir)
-  - [Licencia](#-licencia)
-- [Public](#-public)
-  - [Despliege en local](#-despliege-en-local)
+
+-   Administración
+    -   [Descripción del Proyecto](#-descripción-del-proyecto)
+    -   [Tecnologías Utilizadas](#️-tecnologías-utilizadas)
+    -   [Estructura de la Base de Datos](#-estructura-de-la-base-de-datos)
+    -   [Estructura del Proyecto](#-estructura-del-proyecto)
+    -   [Configuración del Entorno de Desarrollo](#️-configuración-del-entorno-de-desarrollo)
+    -   [Ejecución del Proyecto](#-ejecución-del-proyecto)
+    -   [Ejecución de Pruebas](#-ejecución-de-pruebas)
+    -   [API REST](#-api-rest)
+    -   [Roles de Usuario](#-roles-de-usuario)
+    -   [Despliegue](#-despliegue)
+    -   [Gestión del Proyecto](#-gestión-del-proyecto)
+    -   [Niveles de Entrega](#-niveles-de-entrega)
+    -   [Próximos Pasos](#-próximos-pasos)
+    -   [Equipo de Desarrollo](#-equipo-de-desarrollo)
+    -   [Cómo Contribuir](#-cómo-contribuir)
+    -   [Licencia](#-licencia)
+-   [Public](#-public)
+    -   [Despliege en local](#-despliege-en-local)
 
 ## 📋 Descripción del Proyecto
 
@@ -49,11 +50,11 @@ El proyecto se enfoca en desarrollar una plataforma integral para la empresa Del
   <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
 </div>
 
-- **Backend**: Django 5.1.6, Django REST Framework 3.15.2
-- **Autenticación**: JWT (JSON Web Tokens)
-- **Base de Datos**: PostgreSQL / SQLite (configurable)
-- **Almacenamiento de imágenes**: Cloudinary
-- **Control de versiones**: Git y GitHub Projects
+-   **Backend**: Django 5.1.6, Django REST Framework 3.15.2
+-   **Autenticación**: JWT (JSON Web Tokens)
+-   **Base de Datos**: PostgreSQL / SQLite (configurable)
+-   **Almacenamiento de imágenes**: Cloudinary
+-   **Control de versiones**: Git y GitHub Projects
 
 ## 📊 Estructura de la Base de Datos
 
@@ -61,16 +62,16 @@ El proyecto utiliza una estructura de base de datos relacional optimizada para l
 
 ### Tablas Principales
 
-| Tabla | Descripción |
-| ----- | ----------- |
-| **company** | Almacena información de las empresas registradas con su nombre, CIF y datos de contacto |
-| **type** | Categoriza los tipos de comercio o categorías de negocio |
-| **users** | Gestiona usuarios del sistema con diferentes roles (admin, manager, employee, customer) |
-| **products** | Catálogo de productos con precios, impuestos, stock y relaciones con empresa y tipo |
-| **basket** | Carrito de compras temporal con productos seleccionados por los usuarios |
-| **invoices** | Registro de ventas con información de pago, fecha y montos |
-| **invoice_items** | Detalle de productos incluidos en cada factura |
-| **stock_movements** | Historial de cambios en el inventario (entradas, salidas, ajustes) |
+| Tabla               | Descripción                                                                             |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| **company**         | Almacena información de las empresas registradas con su nombre, CIF y datos de contacto |
+| **type**            | Categoriza los tipos de comercio o categorías de negocio                                |
+| **users**           | Gestiona usuarios del sistema con diferentes roles (admin, manager, employee, customer) |
+| **products**        | Catálogo de productos con precios, impuestos, stock y relaciones con empresa y tipo     |
+| **basket**          | Carrito de compras temporal con productos seleccionados por los usuarios                |
+| **invoices**        | Registro de ventas con información de pago, fecha y montos                              |
+| **invoice_items**   | Detalle de productos incluidos en cada factura                                          |
+| **stock_movements** | Historial de cambios en el inventario (entradas, salidas, ajustes)                      |
 
 La estructura permite un seguimiento completo desde la adición de productos al inventario hasta la venta y facturación, manteniendo un registro de todos los movimientos.
 
@@ -101,120 +102,132 @@ delicate/
 ```
 
 Cada aplicación contiene:
-- **models.py**: Modelos de datos y lógica de negocio
-- **views.py**: Controladores para procesar solicitudes
-- **serializers.py**: Conversión entre formatos de datos
-- **urls.py**: Definición de rutas de la API
-- **admin.py**: Configuración del panel de administración
-- **tests.py**: Pruebas unitarias y de integración
+
+-   **models.py**: Modelos de datos y lógica de negocio
+-   **views.py**: Controladores para procesar solicitudes
+-   **serializers.py**: Conversión entre formatos de datos
+-   **urls.py**: Definición de rutas de la API
+-   **admin.py**: Configuración del panel de administración
+-   **tests.py**: Pruebas unitarias y de integración
 
 ## ⚙️ Configuración del Entorno de Desarrollo
 
 ### Requisitos Previos
 
-- Python 3.12 o superior
-- PostgreSQL (opcional, también puede usar SQLite)
-- pip o uv (gestor de paquetes)
+-   Python 3.12 o superior
+-   PostgreSQL (opcional, también puede usar SQLite)
+-   pip o uv (gestor de paquetes)
 
 ### Instalación
 
 1. **Clonar el repositorio**:
-   ```bash
-   git clone https://github.com/tu-usuario/delicate.git
-   cd delicate
-   ```
+
+    ```bash
+    git clone https://github.com/tu-usuario/delicate.git
+    cd delicate
+    ```
 
 2. **Crear un entorno virtual**:
-   ```bash
-   python -m venv env
-   ```
+
+    ```bash
+    python -m venv env
+    ```
 
 3. **Activar el entorno virtual**:
-   - En Windows:
-     ```bash
-     env\Scripts\activate
-     ```
-   - En macOS/Linux:
-     ```bash
-     source env/bin/activate
-     ```
+
+    - En Windows:
+        ```bash
+        env\Scripts\activate
+        ```
+    - En macOS/Linux:
+        ```bash
+        source env/bin/activate
+        ```
 
 4. **Instalar dependencias**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 5. **Configurar variables de entorno**:
    Crea un archivo `.env` en la raíz del proyecto basándote en el archivo `.env_example`:
-   ```
-   # Configuración general
-   DEBUG=True
-   SECURITY_KEY=tu_clave_segura_generada
 
-   # Configuración de base de datos
-   USE_LOCAL_DB=True
-   LOCAL_DB_NAME=delicate_local
-   LOCAL_DB_USER=postgres
-   LOCAL_DB_PASSWORD=tu_contraseña_local
-   LOCAL_DB_HOST=localhost
-   LOCAL_DB_PORT=5432
+    ```
+    # Configuración general
+    DEBUG=True
+    SECURITY_KEY=tu_clave_segura_generada
 
-   # Cloudinary
-   CLOUDINARY_CLOUD_NAME=tu_cloud_name
-   CLOUDINARY_API_KEY=tu_api_key
-   CLOUDINARY_API_SECRET=tu_api_secret
-   CLOUDINARY_URL_PREFIX=https://res.cloudinary.com/tu_cloud_name/
-   ```
+    # Configuración de base de datos
+    USE_LOCAL_DB=True
+    LOCAL_DB_NAME=delicate_local
+    LOCAL_DB_USER=postgres
+    LOCAL_DB_PASSWORD=tu_contraseña_local
+    LOCAL_DB_HOST=localhost
+    LOCAL_DB_PORT=5432
+
+    # Cloudinary
+    CLOUDINARY_CLOUD_NAME=tu_cloud_name
+    CLOUDINARY_API_KEY=tu_api_key
+    CLOUDINARY_API_SECRET=tu_api_secret
+    CLOUDINARY_URL_PREFIX=https://res.cloudinary.com/tu_cloud_name/
+    ```
 
 6. **Aplicar migraciones**:
-   ```bash
-   python manage.py migrate
-   ```
+    ```bash
+    python manage.py migrate
+    ```
 
 ### Configuración Inicial de la Base de Datos
 
 Para utilizar el sistema, primero debes crear una compañía y un usuario administrador:
 
 1. **Crear una compañía**:
-   ```bash
-   python manage.py shell
-   ```
-   En el shell de Python:
-   ```python
-   from delicate_apps.company.models import Company
-   
-   company = Company.objects.create(
-       name="Mi Empresa",
-       direction="Calle Principal 123",
-       cif="B12345678",
-       phone="123456789",
-       mail="info@miempresa.com"
-   )
-   print(f"Compañía creada con ID: {company.id}")
-   exit()
-   ```
+
+    ```bash
+    python manage.py shell
+    ```
+
+    En el shell de Python:
+
+    ```python
+    from delicate_apps.company.models import Company
+
+    company = Company.objects.create(
+        name="Mi Empresa",
+        direction="Calle Principal 123",
+        cif="B12345678",
+        phone="123456789",
+        mail="info@miempresa.com"
+    )
+    print(f"Compañía creada con ID: {company.id}")
+    exit()
+    ```
 
 2. **Crear un usuario administrador vinculado a la compañía**:
-   ```bash
-   python manage.py customcreateuser
-   ```
-   
-   Sigue las instrucciones en la terminal:
-   ```
-   Email: admin@delicate.com
-   Name: Admin User
-   Roll (admin/manager/employee/customer): admin
-   Company ID: 1  # El ID de la compañía creada anteriormente
-   Password: ****
-   Confirm Password: ****
-   ```
+
+    ```bash
+    python manage.py customcreateuser
+    ```
+
+    Sigue las instrucciones en la terminal:
+
+    ```
+    Email: admin@delicate.com
+    Name: Admin User
+    Roll (admin/manager/employee/customer): admin
+    Company ID: 1  # El ID de la compañía creada anteriormente
+    Password: ****
+    Confirm Password: ****
+    ```
 
 ## 🚀 Ejecución del Proyecto
 
 1. **Iniciar el servidor de desarrollo**:
-   ```bash
-   python manage.py runserver
-   ```
+
+    ```bash
+    python manage.py runserver
+    ```
 
 2. **Acceder al panel de administración**:
    Visita [http://localhost:8000/admin/](http://localhost:8000/admin/) e ingresa con las credenciales del usuario administrador creado anteriormente.
@@ -253,29 +266,33 @@ coverage report
 
 ### Endpoints Principales
 
-- **Autenticación**:
-  - `POST /v1/api/token/`: Obtener token JWT
-  - `POST /v1/api/token/refresh/`: Refrescar token JWT
+-   **Autenticación**:
 
-- **Usuarios**:
-  - `GET /v1/api/users/users/`: Listar usuarios
-  - `POST /v1/api/users/users/`: Crear usuario
-  - `GET /v1/api/users/users/{id}/`: Obtener usuario por ID
+    -   `POST /v1/api/token/`: Obtener token JWT
+    -   `POST /v1/api/token/refresh/`: Refrescar token JWT
 
-- **Productos**:
-  - `GET /v1/api/store/`: Listar productos
-  - `POST /v1/api/store/create/`: Crear producto
-  - `GET /v1/api/store/{id}/`: Obtener producto por ID
+-   **Usuarios**:
 
-- **Carrito de Compras**:
-  - `GET /v1/api/basket/basket/`: Listar items del carrito
-  - `POST /v1/api/basket/basket/add/`: Añadir producto al carrito
-  - `POST /v1/api/basket/basket/checkout/`: Procesar compra
+    -   `GET /v1/api/users/users/`: Listar usuarios
+    -   `POST /v1/api/users/users/`: Crear usuario
+    -   `GET /v1/api/users/users/{id}/`: Obtener usuario por ID
 
-- **Facturas**:
-  - `GET /v1/api/invoices/`: Listar facturas
-  - `GET /v1/api/invoices/{id}/`: Obtener factura por ID
-  - `GET /v1/api/invoices/{id}/export-csv/`: Exportar factura a CSV
+-   **Productos**:
+
+    -   `GET /v1/api/store/`: Listar productos
+    -   `POST /v1/api/store/create/`: Crear producto
+    -   `GET /v1/api/store/{id}/`: Obtener producto por ID
+
+-   **Carrito de Compras**:
+
+    -   `GET /v1/api/basket/basket/`: Listar items del carrito
+    -   `POST /v1/api/basket/basket/add/`: Añadir producto al carrito
+    -   `POST /v1/api/basket/basket/checkout/`: Procesar compra
+
+-   **Facturas**:
+    -   `GET /v1/api/invoices/`: Listar facturas
+    -   `GET /v1/api/invoices/{id}/`: Obtener factura por ID
+    -   `GET /v1/api/invoices/{id}/export-csv/`: Exportar factura a CSV
 
 ## 🔐 Roles de Usuario
 
@@ -352,6 +369,7 @@ El proyecto soporta múltiples opciones de base de datos:
 #### SQLite (Desarrollo)
 
 Para utilizar SQLite, configura en el archivo `.env`:
+
 ```
 USE_LOCAL_DB=False
 USE_SQLITE=True
@@ -360,6 +378,7 @@ USE_SQLITE=True
 #### PostgreSQL Local
 
 Para utilizar PostgreSQL local, configura en el archivo `.env`:
+
 ```
 USE_LOCAL_DB=True
 USE_SQLITE=False
@@ -371,6 +390,7 @@ LOCAL_DB_PASSWORD=tu_contraseña
 #### PostgreSQL Remoto
 
 Para utilizar una base de datos PostgreSQL remota, configura en el archivo `.env`:
+
 ```
 USE_LOCAL_DB=False
 USE_SQLITE=False
@@ -381,8 +401,6 @@ DB_HOST=tu_host_remoto
 DB_PORT=5432
 ```
 
-
-
 ## 📊 Gestión del Proyecto
 
 El desarrollo de Delicaté se ha gestionado utilizando GitHub Projects, implementando metodologías ágiles (SCRUM) para organizar el trabajo, realizar seguimiento de tareas y planificar sprints. Cada funcionalidad ha sido implementada siguiendo el flujo de trabajo de Git-flow, con ramas específicas para características, correcciones y versiones.
@@ -392,6 +410,7 @@ El desarrollo de Delicaté se ha gestionado utilizando GitHub Projects, implemen
 La parte publica para este proyecto se implementará utilizando Fast API. Esta sección se completará en una fase posterior del desarrollo.
 
 ## Despliege en local
+
 Para utilizar una base de datos PostgreSQL remota y securias los login es necesario, configura en el archivo `.env`.
 
 ```bash
@@ -402,40 +421,45 @@ python main.py
 --
 uvicorno app.main:app --reload
 ```
+
 ## End point principales de Public
 
 ### Endpoints Principales
 
-- **Autenticación**:
-  - `POST /v1/token/`: Logarse token JWT
-  - `GET /v1/protected/`: Obtener el token
+-   **Autenticación**:
 
-  **Monolitico**
-  - Registrarse
-  - Logarse
-  - Ver productos
-  - Ver detalles de productos
-  - Añadir a la cesta
-  - Finalir compra
-  - Listar productos comprados
-  - Descargar en pdf de factura
+    -   `POST /v1/token/`: Logarse token JWT
+    -   `GET /v1/protected/`: Obtener el token
+
+    **Monolitico**
+
+    -   Registrarse
+    -   Logarse
+    -   Ver productos
+    -   Ver detalles de productos
+    -   Añadir a la cesta
+    -   Finalir compra
+    -   Listar productos comprados
+    -   Descargar en pdf de factura
 
 ```bash
 pytest tests/
 ```
+
 ## Deploy
+
 Esta parte esta desplegada en Render
 [Visitar en vercel](https://delicate-yxth.onrender.com/)
+
 ## 🚧 Niveles de Entrega
 
 El proyecto se ha desarrollado siguiendo un enfoque incremental con los siguientes niveles de funcionalidad:
-
 
 ## 🔮 Próximos Pasos
 
 Esta sección describirá las mejoras y características planificadas para futuras versiones del proyecto.
 
-> *Esta sección se completará a medida que el proyecto evolucione, detallando las próximas funcionalidades y mejoras que se implementarán.*
+> _Esta sección se completará a medida que el proyecto evolucione, detallando las próximas funcionalidades y mejoras que se implementarán._
 
 ## 👥 Equipo de Desarrollo
 
@@ -482,7 +506,7 @@ Esta sección describirá las mejoras y características planificadas para futur
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT 
+Este proyecto está bajo la Licencia MIT
 
 ## 👐 Cómo Contribuir
 
@@ -498,9 +522,9 @@ Este proyecto está bajo la Licencia MIT
 
 ### Guías de Contribución
 
-- Mantén el código limpio y bien documentado
-- Sigue las convenciones de nomenclatura existentes
-- Añade pruebas para nuevas funcionalidades
-- Actualiza la documentación cuando sea necesario
+-   Mantén el código limpio y bien documentado
+-   Sigue las convenciones de nomenclatura existentes
+-   Añade pruebas para nuevas funcionalidades
+-   Actualiza la documentación cuando sea necesario
 
 Gracias por considerar contribuir a este proyecto. Tu ayuda es fundamental para su mejora continua.
