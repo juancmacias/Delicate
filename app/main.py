@@ -1,25 +1,17 @@
-from fastapi import FastAPI, APIRouter, Request, Body, Form, HTTPException, File, UploadFile, Depends, Query, Response, Header
-
+from fastapi import FastAPI, Request, Form, HTTPException, Depends, Response
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
-from fastapi_versioning import VersionedFastAPI, version
-
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import secrets
-from passlib.context import CryptContext
 import jwt
 from datetime import datetime, timedelta,  timezone
-
 from sqlalchemy.orm import Session
 from app.models.models import *
 from app.models.crud import *
+from app.auth import *
 from app.models.database import get_db
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
-from app.auth import create_access_token_1, decode_access_token, verify_password, hash_password
-
-from datetime import timedelta
 
 import os 
 from dotenv import load_dotenv
@@ -85,7 +77,7 @@ async def login_for_access_token(response: Response,
                                 db: Session = Depends(get_db)):
     #user = authenticate_user(form_data.username, form_data.password)
     user = search_user(db, form_data.username)
-  
+    print(user)
     if not user or not verify_password(form_data.password, user.password):
         raise HTTPException(status_code=400, detail="Usuario o contraseña incorrectos")
     session_key = secrets.token_urlsafe(30)[:40]
@@ -108,8 +100,9 @@ async def protected_route(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, os.getenv("SECRET_KEY"), algorithms=[os.getenv("ALGORITHM")])
         username = payload.get("sub_")
-        if username is None:
-            raise HTTPException(status_code=401, detail="Token inválido")
+        print(username)
+        #if username is None:
+            #raise HTTPException(status_code=401, detail="Token inválido")
         return {"message": f"Hola {username}, estás autenticado!"}
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="El token ha expirado")
@@ -117,11 +110,6 @@ async def protected_route(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Token inválido")
     
 
-# el icono predeterminado de la pestaña del navegador
-favicon_path = 'favicon.ico'  # Adjust path to file
-@app.get('/favicon.ico', include_in_schema=False)
-async def favicon():
-    return FileResponse(favicon_path)
 
 # Rutas
 @app.get("/", response_class=HTMLResponse)
