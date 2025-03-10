@@ -22,9 +22,9 @@ class UserAdmin(BaseUserAdmin):
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
     # Mostrar campos en la lista del panel de administración
-    list_display = ('id', 'name', 'email', 'username', 'roll', 'active')
+    list_display = ('id', 'name', 'email', 'roll', 'active')
     # Habilitar una barra de búsqueda
-    search_fields = ('name', 'email', 'username', 'roll')
+    search_fields = ('name', 'email', 'roll')
     # Añadir filtros laterales
     list_filter = ('active', 'roll')
     # Ordenar los registros de forma predeterminada

@@ -173,15 +173,27 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': (  # Corrigiendo nombre del parámetro
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        #'rest_framework.authentication.SessionAuthentication',  # Autenticación basada en sesiones
-        #'rest_framework.authentication.BasicAuthentication',    # Autenticación básica (opcional)
+        'rest_framework.authentication.SessionAuthentication',  # Autenticación basada en sesiones
+        'rest_framework.authentication.BasicAuthentication',    # Autenticación básica (opcional)
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        #'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
+        #'rest_framework.permissions.AllowAny',
     ),
 }
-
+# Configuración de Swagger
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+        },
+    },
+    'USE_SESSION_AUTH': True,  # Habilita el botón de Login Django
+    'LOGIN_URL': 'admin:login',  # URL para el login de Django
+    'LOGOUT_URL': 'admin:logout',  # URL para el logout de Django
+}
 # Configuración de Simple JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
@@ -202,7 +214,7 @@ SIMPLE_JWT = {
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'users.auth_backends.CustomBackend',
+    #'users.auth_backends.CustomBackend',
 ]    
 # Configuración de autenticación personalizada
 AUTH_USER_MODEL = 'users.User' 

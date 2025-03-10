@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
 from delicate_apps.company.models import Company
+from django.core.exceptions import ValidationError
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -48,6 +49,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
     roll = models.CharField(max_length=50, choices=ROLE_CHOICES, default='employee')
     name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
 
     # Configurar related_name único para groups y user_permissions
