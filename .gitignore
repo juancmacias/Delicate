@@ -1,10 +1,37 @@
-# Entornos virtuales
-.venv/
-venv/
-ENV/
-
-# Archivos de sistema
-.DS_Store
+# Archivos de Python
+*.pyc
+*.pyo
 __pycache__/
-*.py[cod]
-*.class
+*.sqlite3
+
+# Archivos de entorno y configuraciones sensibles
+.env
+*.env
+
+# Dependencias y entornos virtuales
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos de compilación
+build/
+dist/
+*.egg-info/
+
+# Configuración del IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de Django y migraciones innecesarias
+*.log
+*.pot
+*.py[co]
+db.sqlite3
+migrations/**/__pycache__/
+
+# Archivos de caché
+.DS_Store
+Thumbs.db
