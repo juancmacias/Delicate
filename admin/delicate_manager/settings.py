@@ -16,17 +16,14 @@ from dotenv import load_dotenv
 import sys
 import cloudinary.uploader
 import cloudinary.api
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = BASE_DIR / ".env"
-dotenv_path = BASE_DIR / ".env"
 sys.path.append(os.path.join(BASE_DIR, 'delicate_apps'))
 if dotenv_path.exists():
     load_dotenv(dotenv_path)
-if dotenv_path.exists():
-    load_dotenv(dotenv_path)
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -37,12 +34,9 @@ SECRET_KEY = os.getenv('SECURITY_KEY', 'django-insecure-t1#2dnyy1$o#h38=euicqba8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
-
 # Application definition
-
 INSTALLED_APPS = [
     # Aplicaciones propias
     'delicate_apps.users',
@@ -62,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
+    'drf_yasg',
     # Cloudinary apps
     'cloudinary_storage',
     'cloudinary',
@@ -97,8 +92,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'delicate_manager.wsgi.application'
-
-
 # Database configuration
 # Determinar si se usa la base de datos local o remota
 USE_LOCAL_DB = os.environ.get('USE_LOCAL_DB', 'False') == 'True'
@@ -138,7 +131,6 @@ else:
         }
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -160,19 +152,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
 
 # Default primary key field type
@@ -201,7 +187,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-from datetime import timedelta
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
