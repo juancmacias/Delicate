@@ -1,25 +1,17 @@
-from fastapi import FastAPI, APIRouter, Request, Body, Form, HTTPException, File, UploadFile, Depends, Query, Response, Header
-
+from fastapi import FastAPI, Request, Form, HTTPException, Depends, Response
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
-from fastapi_versioning import VersionedFastAPI, version
-
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import secrets
-from passlib.context import CryptContext
 import jwt
 from datetime import datetime, timedelta,  timezone
-
 from sqlalchemy.orm import Session
 from app.models.models import *
 from app.models.crud import *
+from app.auth import *
 from app.models.database import get_db
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
-from app.auth import create_access_token_1, decode_access_token, verify_password, hash_password
-
-from datetime import timedelta
 
 import os 
 from dotenv import load_dotenv
