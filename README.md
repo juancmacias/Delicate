@@ -423,7 +423,9 @@ uvicorno app.main:app --reload
 ```bash
 pytest tests/
 ```
-
+## Deploy
+Esta parte esta desplegada en Render
+[Visitar en vercel](https://delicate-yxth.onrender.com/)
 ## 🚧 Niveles de Entrega
 
 El proyecto se ha desarrollado siguiendo un enfoque incremental con los siguientes niveles de funcionalidad:
