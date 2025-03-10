@@ -38,8 +38,6 @@ footer {
   text-align: center;
 }
 header {
-  background: url("{{ url_for('static', path='img/header-image.jpg') }}")
-    no-repeat center/cover;
   padding: 100px 20px;
 }
 .products,
