@@ -43,8 +43,6 @@ urlpatterns = [
         path('users/', include('delicate_apps.users.urls')),
         path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-        path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-        path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
         #path('accounts/login/', auth_views.LoginView.as_view(), name='login'),  # URL de login de Django
     ])),
 ]

@@ -49,7 +49,6 @@ class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
     roll = models.CharField(max_length=50, choices=ROLE_CHOICES, default='employee')
     name = models.CharField(max_length=255)
-    username = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
 
     # Configurar related_name único para groups y user_permissions
