@@ -4,6 +4,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+
 app = FastAPI()
 
 class EmailRequest(BaseModel):
@@ -15,7 +16,7 @@ class EmailRequest(BaseModel):
 async def send_email(email_request: EmailRequest):
     smtp_server = 'smtp.gmail.com'
     from_email = 'devprueba282@gmail.com'
-    password = 'fnwt fftq pqpq alkh'
+    password = os.getenv('MAIL_PASS')
 
     try:
         # Create a multipart message

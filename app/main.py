@@ -27,6 +27,9 @@ from datetime import timedelta
 import os 
 from dotenv import load_dotenv
 
+from app.mail import Mail
+Mail("devprueba211@gmail.com")
+
 # crear entorno -> python -m venv env
 # activar entorno -> env\Scripts\activate
 # instalar  -> pip install -r requirements.txt

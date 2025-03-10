@@ -39,7 +39,8 @@ python-dotenv
 python-jose        
 python-multipart   
 requests           
-rsa                
+rsa   
+secure-smtplib             
 setuptools         
 six               
 sniffio           
