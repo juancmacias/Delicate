@@ -56,4 +56,6 @@ Werkzeug
 xhtml2pdf
 zipp
 zopfli
-
+gunicorn
+httpx
+pytest
