@@ -6,13 +6,13 @@ from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import secrets
 import jwt
+
 from datetime import datetime, timedelta,  timezone
 from sqlalchemy.orm import Session
 from app.models.models import *
 from app.models.crud import *
 from app.auth import *
 from app.models.database import get_db
-
 
 import os 
 from dotenv import load_dotenv
@@ -103,9 +103,9 @@ async def protected_route(token: str = Depends(oauth2_scheme)):
         if username is None:
             raise HTTPException(status_code=401, detail="Token inválido")
         return {"message": f"Hola {username}, estás autenticado!"}
-    except jwt.ExpiredSignatureError:
+    except jwt.JWT:
         raise HTTPException(status_code=401, detail="El token ha expirado")
-    except jwt.InvalidTokenError:
+    except jwt.JWT:
         raise HTTPException(status_code=401, detail="Token inválido")
     
 
