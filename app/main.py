@@ -13,6 +13,7 @@ from app.models.crud import *
 from app.auth import *
 from app.models.database import get_db
 
+
 import os 
 from dotenv import load_dotenv
 
