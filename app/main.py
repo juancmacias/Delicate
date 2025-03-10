@@ -77,7 +77,7 @@ async def login_for_access_token(response: Response,
                                 db: Session = Depends(get_db)):
     #user = authenticate_user(form_data.username, form_data.password)
     user = search_user(db, form_data.username)
-  
+    print(user)
     if not user or not verify_password(form_data.password, user.password):
         raise HTTPException(status_code=400, detail="Usuario o contraseña incorrectos")
     session_key = secrets.token_urlsafe(30)[:40]
@@ -100,8 +100,9 @@ async def protected_route(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, os.getenv("SECRET_KEY"), algorithms=[os.getenv("ALGORITHM")])
         username = payload.get("sub_")
-        if username is None:
-            raise HTTPException(status_code=401, detail="Token inválido")
+        print(username)
+        #if username is None:
+            #raise HTTPException(status_code=401, detail="Token inválido")
         return {"message": f"Hola {username}, estás autenticado!"}
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="El token ha expirado")
