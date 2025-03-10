@@ -24,8 +24,7 @@ from dotenv import load_dotenv
 # ejecutar el servidor -> python main.py
 # para leer el .env
 
-dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
-load_dotenv(dotenv_path)
+load_dotenv()
 app = FastAPI(
     title="API de market place",
     description="Esta api maneja los elementos para mostrar los productos de la tienda con FastAPI",
@@ -112,6 +111,8 @@ async def protected_route(token: str = Depends(oauth2_scheme)):
 
 
 # Rutas
+
+# inicial
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, company_data = Depends(compay_data), db: Session = Depends(get_db) ):
     all_products = obtener_Products(db)
@@ -168,6 +169,12 @@ async def pay(request: Request, db: Session = Depends(get_db), company_data = De
                 quantity=cart_item.cantidad,
                 price=cart_item.precio
             )
+            #
+            store_edit = obtener_Product_por_id(db, cart_item.product_id)
+            store_edit.stock = store_edit.stock - cart_item.cantidad
+            db.commit()
+            db.refresh(store_edit)
+
             db.add(create_invoid_items)
             # borramos los temporales
             db.delete(cart_item)  
@@ -295,12 +302,14 @@ async def read_users_me(request: Request,
             return RedirectResponse(url='/logout', status_code=303)
         cart_store = obtener_Cart(db, user.id)
         invoices = obtener_Invoices(db, user.id)
+        productos_count = obtener_Invoices_Items(db, user.id)
         return templates.TemplateResponse("user.html", {
             "request": request,
             "company": company_data,
             "user": user,
             "cart_store": cart_store,
-            "invoices": invoices
+            "invoices": invoices,
+            "productos_count": productos_count
         })
     else:
         return RedirectResponse(url='/logout', status_code=303)

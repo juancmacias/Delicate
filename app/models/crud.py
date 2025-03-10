@@ -37,6 +37,10 @@ def obtener_Company(db : Session, id : int):
 def obtener_Invoices(db : Session, user_id: int):
     return db.query(Invoid).filter(Invoid.fk_user == user_id).order_by(Invoid.id.desc()).all()
 
+def obtener_Invoices_Items(db: Session, user_id: int):
+    invoice_items_count = db.query(Invoid_Items).join(Invoid, Invoid_Items.invoice_id == Invoid.id).filter(Invoid.fk_user == user_id).count()
+    return invoice_items_count
+
 # obtener sesiones
 def obtener_Sessions(db : Session, session_key):
     print("recibido: ", session_key)
