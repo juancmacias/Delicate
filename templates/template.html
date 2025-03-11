@@ -54,92 +54,13 @@
         <!-- Formulario de edición -->
         <section class="profile-form">
           <h2 class="cinzel-thin">Modifica tu información</h2>
-          <form
-            action="/users"
-            id="envio"
-            method="post"
-            onsubmit="delaySubmit(event)"
-          >
-            <input
-              name="username"
-              type="text"
-              placeholder="Nombre"
-              value="{{ user.username }}"
-            />
-            <input
-              name="first_name"
-              type="text"
-              placeholder="Apellido"
-              value="{{ user.last_name }}"
-            />
-            <input
-              name="email"
-              type="email"
-              placeholder="Email"
-              value="{{ user.email }}"
-              required
-            />
-            <input
-              name="re_email"
-              type="email"
-              placeholder="Confirma tu email"
-              value=""
-              required
-            />
-            <div class="password-container">
-              <input
-                name="password"
-                type="password"
-                id="password"
-                placeholder="Contraseña"
-                value=""
-                required
-              />
-              <span class="toggle-password" onclick="togglePassword('password')"
-                >👁️</span
-              >
-            </div>
-            <div class="password-container">
-              <input
-                name="confirm_password"
-                type="password"
-                id="confirm-password"
-                placeholder="Confirma la contraseña"
-                required
-              />
-              <span
-                class="toggle-password"
-                onclick="togglePassword('confirm-password')"
-                >👁️</span
-              >
-            </div>
-            <button type="submit" class="save-button">GUARDAR CAMBIOS</button>
-          </form>
-          <script>
-            function delaySubmit(event) {
-              event.preventDefault(); // Evita que el formulario se envíe de inmediato
-              localStorage.removeItem("token");
-              // Espera 3 segundos (3000 milisegundos) antes de enviar el formulario
-              setTimeout(function () {
-                // Elimina el token de la sesión
-                document.getElementById("envio").submit(); // Envía el formulario después del retraso
-              }, 1000); // Puedes ajustar el tiempo en milisegundos
-            }
-          </script>
+         
+
         </section>
       </div>
 
       {% include "include/footer.html" %}
     </div>
-    <script>
-      function togglePassword(id) {
-        const input = document.getElementById(id);
-        if (input.type === "password") {
-          input.type = "text";
-        } else {
-          input.type = "password";
-        }
-      }
-    </script>
+
   </body>
 </html>
